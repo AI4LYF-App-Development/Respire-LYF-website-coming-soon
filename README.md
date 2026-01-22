@@ -1,6 +1,6 @@
 # RespireLYF Website
 
-World-class Next.js website for RespireLYF - Multi-Determinant Respiratory Intelligence Co-Pilot.
+World-class Next.js website for RespireLYF - All-in-One Respiratory Co-Pilot.
 
 ## Getting Started
 

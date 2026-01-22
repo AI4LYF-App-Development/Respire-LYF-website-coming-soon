@@ -54,6 +54,8 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
     setShowClarityText(false)
     setVisibleIconIndices(new Set())
     setIsAnimationComplete(false)
+    setShowHealthDeterminantsLabel(false)
+    setShowHealthIndicatorsLabel(false)
     
     // Reset Meet Respire LYF states - batch updates
     setShowMeetText(false)
@@ -136,32 +138,16 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
     }
   }
 
-  // Handle wheel scroll to trigger scroll to next section
-  useEffect(() => {
-    const handleWheel = (e: WheelEvent) => {
-      // Only handle downward scroll when at the top of the page
-      if (e.deltaY > 0 && window.scrollY < 50) {
-        // Clear any existing timeout
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current)
-        }
-
-        // Debounce scroll events
-        scrollTimeoutRef.current = setTimeout(() => {
-          handleScrollToNext()
-        }, 100)
-      }
+  // Handle scroll to previous section (top)
+  const handleScrollToPrevious = () => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
     }
+  }
 
-    window.addEventListener('wheel', handleWheel, { passive: true })
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel)
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current)
-      }
-    }
-  }, [])
 
   const isLastQuestion = currentIndex === 4
   const [isAnimationComplete, setIsAnimationComplete] = useState(false)
@@ -250,6 +236,8 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
   const [showKPIsFinalText, setShowKPIsFinalText] = useState(false)
   const [showClarityText, setShowClarityText] = useState(false)
   const [visibleIconIndices, setVisibleIconIndices] = useState<Set<number>>(new Set())
+  const [showHealthDeterminantsLabel, setShowHealthDeterminantsLabel] = useState(false)
+  const [showHealthIndicatorsLabel, setShowHealthIndicatorsLabel] = useState(false)
 
   // Reset animation states when switching to/from last question or between 5th/6th slides
   useEffect(() => {
@@ -287,6 +275,8 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
       setShowClarityText(false)
       setVisibleIconIndices(new Set())
       setIsAnimationComplete(false)
+      setShowHealthDeterminantsLabel(false)
+      setShowHealthIndicatorsLabel(false)
 
       // Start animation immediately with question text (no delay for "What if")
       // Show determinants text first
@@ -391,27 +381,29 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
       // Only reset animation states, not the slide visibility state
       // But only if we're not intentionally showing the 6th slide
       if (!intentionallyShowing6thSlideRef.current) {
-        setShowDeterminantsText(false)
-        setShowKPIsMiddleText(false)
-        setShowKPIsFinalText(false)
-        setShowClarityText(false)
-        setVisibleIconIndices(new Set())
-        setIsAnimationComplete(false)
+      setShowDeterminantsText(false)
+      setShowKPIsMiddleText(false)
+      setShowKPIsFinalText(false)
+      setShowClarityText(false)
+      setVisibleIconIndices(new Set())
+      setIsAnimationComplete(false)
+      setShowHealthDeterminantsLabel(false)
+      setShowHealthIndicatorsLabel(false)
         
         // Only reset Meet Respire LYF animation states if we're not showing the 6th slide
         // This prevents the useEffect from interfering when user clicks 6th slide
         if (!showMeetRespireLYF) {
           // Reset all Meet Respire LYF animation states
-          setShowMeetText(false)
-          setShowRespireLYFText(false)
-          setShowLogo(false)
-          setShowLiveYourFullest(false)
-          setLiveYourFullestWordIndex(0)
-          setShowSlogan(false)
-          setSloganCharacterIndex(0)
-          setShowSimplePersonalAffordable(false)
-          setSimplePersonalAffordableWordIndex(0)
-          setShowMasterMonitor(false)
+      setShowMeetText(false)
+      setShowRespireLYFText(false)
+      setShowLogo(false)
+      setShowLiveYourFullest(false)
+      setLiveYourFullestWordIndex(0)
+      setShowSlogan(false)
+      setSloganCharacterIndex(0)
+      setShowSimplePersonalAffordable(false)
+      setSimplePersonalAffordableWordIndex(0)
+      setShowMasterMonitor(false)
           setMoveTextsToLogo(false)
         }
       }
@@ -514,6 +506,16 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
         const iconIndex = charIndex
         addTimeout(setTimeout(() => {
           setVisibleIconIndices(prev => new Set([...prev, iconIndex]))
+          
+          // Show "Health Determinants (HD)" label when first determinant icon (index 0) appears
+          if (iconIndex === 0) {
+            setShowHealthDeterminantsLabel(true)
+          }
+          
+          // Show "Health Indicators (HI)" label when first indicator icon (index 10) appears
+          if (iconIndex === 10) {
+            setShowHealthIndicatorsLabel(true)
+          }
         }, iconTiming))
       }
     })
@@ -553,6 +555,13 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
     const text = "Replace the Chaos With Confidence"
     const characters = Array.from(text)
     const totalIcons = 15 // 10 determinants + 5 KPIs
+    const determinantsCount = 10 // Icons 0-9
+    const kpisCount = 5 // Icons 10-14
+    
+    // Track merged icons to know when to hide labels
+    // Icons merge in reverse order: last icon (14) first, first icon (0) last
+    // So when icon 10 (first KPI) merges, all KPIs are merged
+    // And when icon 0 (first determinant) merges, all determinants are merged
     
     // ============================================
     // TIMING CONTROLS - Adjust these values to change animation speed
@@ -603,6 +612,20 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
             newSet.delete(iconIndex)
             return newSet
           })
+          
+          // Check if all KPI icons (10-14) have merged - hide "Health Indicators (HI)"
+          // Icons merge in reverse order: 14, 13, 12, 11, 10
+          // When icon 10 (first KPI) merges, all KPIs (10-14) have merged
+          if (iconIndex === 10) {
+            setShowHealthIndicatorsLabel(false)
+          }
+          
+          // Check if all Determinant icons (0-9) have merged - hide "Health Determinants (HD)"
+          // Icons merge in reverse order: 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+          // When icon 0 (first determinant) merges, all determinants (0-9) have merged
+          if (iconIndex === 0) {
+            setShowHealthDeterminantsLabel(false)
+          }
         }, iconMergeTiming))
       }
     })
@@ -617,12 +640,12 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
 
       // Add 1 second delay after text completes
       addTimeout(setTimeout(() => {
-        // Fade out "Replace the Chaos"
+      // Fade out "Replace the Chaos"
         setShowReplaceChaosFadeOut(true)
 
         // Hide "Meet" word only (keep "Respire LYF" visible)
-        setHideMeetAfterMerge(true)
-        setMeetOpacity(0.0)
+          setHideMeetAfterMerge(true)
+          setMeetOpacity(0.0)
 
         // Start moving texts toward logo smoothly
         setMoveTextsToLogo(true)
@@ -631,7 +654,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
         const textMoveDuration = 2500 // 2.5s for slow, smooth, professional text movement
         addTimeout(setTimeout(() => {
           // Very smoothly appear the master monitor circle above logo (stable, not rotating)
-          setShowMasterMonitor(true)
+            setShowMasterMonitor(true)
           setStartMasterMonitorRotation(false) // Ensure rotation doesn't start immediately
 
           // After 2 seconds of being stable, start rotation
@@ -710,7 +733,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
 
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center overflow-x-hidden overflow-y-auto" style={{ background: 'radial-gradient(circle at center, rgba(80, 167, 226, 0.08) 0%, rgba(255, 255, 255, 1) 75%)' }}>
+    <section id="what-if-questions" className="relative min-h-screen flex flex-col items-center overflow-x-hidden overflow-y-auto" style={{ background: 'radial-gradient(circle at center, rgba(80, 167, 226, 0.08) 0%, rgba(255, 255, 255, 1) 75%)' }}>
       
       {/* Background Bubbles/Orbs - Enhanced from source project */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
@@ -791,7 +814,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
         <div className="flex items-center gap-4 sm:gap-8">
           <button 
             onClick={onJoinWaitlist}
-            className="bg-primary hover:bg-[#4296d1] text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg transition-all shadow-lg shadow-primary/20"
+            className="bg-primary hover:bg-[#4296d1] text-white text-xs sm:text-sm font-bold px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg transition-all shadow-lg shadow-primary/20 border border-white/30 hover:border-white/50"
           >
             Join Waitlist
           </button>
@@ -982,6 +1005,128 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                         className="absolute inset-0"
                       />
 
+                      {/* Health Determinants (HD) Label - Left side */}
+                      <AnimatePresence>
+                        {showHealthDeterminantsLabel && (
+                          <motion.div
+                            className="absolute z-30"
+                            style={{
+                              left: `calc(50% - ${responsiveCircleRadius + responsiveIconSize + 280}px)`,
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                            }}
+                            initial={{ opacity: 0, x: -30, scale: 0.9 }}
+                            animate={{ 
+                              opacity: 1, 
+                              x: 0, 
+                              scale: 1,
+                              y: [0, -8, 0],
+                              rotate: [0, 1, -1, 0]
+                            }}
+                            exit={{ opacity: 0, x: -30, scale: 0.9 }}
+                            transition={{ 
+                              opacity: { duration: 0.4 },
+                              x: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                              scale: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                              y: {
+                                duration: 4,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              },
+                              rotate: {
+                                duration: 6,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }
+                            }}
+                          >
+                            <div 
+                              className="relative px-4 py-2.5 rounded-lg overflow-hidden"
+                              style={{
+                                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%)',
+                                backdropFilter: 'blur(24px) saturate(200%)',
+                                WebkitBackdropFilter: 'blur(24px) saturate(200%)',
+                                border: '2px solid rgba(80, 167, 226, 0.6)',
+                                boxShadow: '0 8px 32px 0 rgba(40, 148, 217, 0.15), 0 2px 8px 0 rgba(0, 0, 0, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                              }}
+                            >
+                              {/* Glass shine effect */}
+                              <div 
+                                className="absolute inset-0 pointer-events-none"
+                                style={{
+                                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%)',
+                                  borderRadius: 'inherit',
+                                }}
+                              />
+                              <p className="relative text-charcoal text-sm sm:text-base md:text-lg font-bold whitespace-nowrap tracking-tight z-10 drop-shadow-sm">
+                                Health Determinants <span className="text-primary font-extrabold">(HD)</span>
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {/* Health Indicators (HI) Label - Right side */}
+                      <AnimatePresence>
+                        {showHealthIndicatorsLabel && (
+                          <motion.div
+                            className="absolute z-30"
+                            style={{
+                              left: `calc(50% + ${responsiveCircleRadius + responsiveIconSize + 100}px)`,
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                            }}
+                            initial={{ opacity: 0, x: 30, scale: 0.9 }}
+                            animate={{ 
+                              opacity: 1, 
+                              x: 0, 
+                              scale: 1,
+                              y: [0, -8, 0],
+                              rotate: [0, -1, 1, 0]
+                            }}
+                            exit={{ opacity: 0, x: 30, scale: 0.9 }}
+                            transition={{ 
+                              opacity: { duration: 0.4 },
+                              x: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                              scale: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+                              y: {
+                                duration: 4,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              },
+                              rotate: {
+                                duration: 6,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }
+                            }}
+                          >
+                            <div 
+                              className="relative px-4 py-2.5 rounded-lg overflow-hidden"
+                              style={{
+                                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%)',
+                                backdropFilter: 'blur(24px) saturate(200%)',
+                                WebkitBackdropFilter: 'blur(24px) saturate(200%)',
+                                border: '2px solid rgba(80, 167, 226, 0.6)',
+                                boxShadow: '0 8px 32px 0 rgba(40, 148, 217, 0.15), 0 2px 8px 0 rgba(0, 0, 0, 0.1), inset 0 1px 1px 0 rgba(255, 255, 255, 0.4), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.05)',
+                              }}
+                            >
+                              {/* Glass shine effect */}
+                              <div 
+                                className="absolute inset-0 pointer-events-none"
+                                style={{
+                                  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%)',
+                                  borderRadius: 'inherit',
+                                }}
+                              />
+                              <p className="relative text-charcoal text-sm sm:text-base md:text-lg font-bold whitespace-nowrap tracking-tight z-10 drop-shadow-sm">
+                                Health Indicators <span className="text-primary font-extrabold">(HI)</span>
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
                       {/* Master Monitor Circle - appears stable first, then rotates after 2 seconds */}
                       {/* Positioned above logo, centered horizontally, same position for appearance and rotation */}
                       {showMasterMonitor && (
@@ -1023,7 +1168,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                               sizes="280px"
                               priority
                             />
-                          </motion.div>
+                        </motion.div>
                         </div>
                       )}
 
@@ -1159,11 +1304,11 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                       mass: 0.9
                     }}
                   >
-                    {["Simple", "Personal", "Affordable"].map((word, index) => {
-                      const wordIndex = index * 2 + 1 // Account for separators
-                      const isVisible = wordIndex <= simplePersonalAffordableWordIndex
+                      {["Simple", "Personal", "Affordable"].map((word, index) => {
+                        const wordIndex = index * 2 + 1 // Account for separators
+                        const isVisible = wordIndex <= simplePersonalAffordableWordIndex
 // 256096
-                      return (
+                        return (
                         <>
                           <span 
                             key={`word-${index}`} 
@@ -1172,9 +1317,9 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                               transition: 'color 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                             }}
                           > 
-                            {word}
-                          </span>
-                          {index < 2 && (
+                              {word}
+                            </span>
+                            {index < 2 && (
                             <>
                               <span 
                                 key={`separator-${index}`}
@@ -1195,10 +1340,10 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                                 {' — '}
                               </span>
                             </>
-                          )}
+                            )}
                         </>
-                      )
-                    })}
+                        )
+                      })}
                   </motion.div>
                 )}
 
@@ -1294,14 +1439,14 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
             <div className="w-full lg:w-1/2 flex flex-col justify-center">
               {/* "What if" text - stable (no animation), left-aligned */}
               <div className="w-full mb-8 sm:mb-10 md:mb-12">
-                <h1
+              <h1
                   className="text-primary text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-black tracking-tighter font-display text-left"
-                  style={{
-                    textShadow: '0 0 20px rgba(80, 167, 226, 0.4), 0 0 40px rgba(80, 167, 226, 0.1)'
-                  }}
-                >
-                  What if
-                </h1>
+                style={{
+                  textShadow: '0 0 20px rgba(80, 167, 226, 0.4), 0 0 40px rgba(80, 167, 226, 0.1)'
+                }}
+              >
+                What if
+              </h1>
               </div>
 
               {/* Question text - word by word animation matching Swift */}
@@ -1402,9 +1547,9 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
           {QUESTIONS.map((_, index) => {
             const isActive = index === currentIndex && !showMeetRespireLYF
             return (
-              <button
-                key={index}
-                onClick={() => {
+            <button
+              key={index}
+              onClick={() => {
                   // Immediately stop all animations and reset states for smooth transition
                   clearAllAnimationTimeouts()
                   resetAllAnimationStates()
@@ -1417,23 +1562,23 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                   sixthSlideAnimationsStartedRef.current = false
                   
                   // Update slide state immediately - React will batch these updates
-                  setDirection(index > currentIndex ? 1 : -1)
-                  setCurrentIndex(index)
+                setDirection(index > currentIndex ? 1 : -1)
+                setCurrentIndex(index)
                   setShowMeetRespireLYF(false)
-                }}
-                className="relative"
-                aria-label={`Go to question ${index + 1}`}
-              >
+              }}
+              className="relative"
+              aria-label={`Go to question ${index + 1}`}
+            >
                 {isActive ? (
-                  <motion.span
-                    layoutId="activeDot"
+                <motion.span
+                  layoutId="activeDot"
                     className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_12px_rgba(80,167,226,0.5)] block"
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                ) : (
-                  <span className="w-2.5 h-2.5 rounded-full bg-charcoal/10 hover:bg-charcoal/20 transition-all duration-300 cursor-pointer block"></span>
-                )}
-              </button>
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              ) : (
+                <span className="w-2.5 h-2.5 rounded-full bg-charcoal/10 hover:bg-charcoal/20 transition-all duration-300 cursor-pointer block"></span>
+              )}
+            </button>
             )
           })}
           {/* 6th dot for Meet Respire LYF slide */}
@@ -1457,7 +1602,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
               
               // Set showMeetRespireLYF to true - this controls which slide renders
               // showMeetRespireLYF takes precedence in rendering logic
-              setShowMeetRespireLYF(true)
+                setShowMeetRespireLYF(true)
               
               // Animation will be started by useEffect when showMeetRespireLYF becomes true
               // This ensures consistent behavior with the 5th slide

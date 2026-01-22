@@ -1,9 +1,14 @@
 'use client'
 
+import { useState } from 'react'
+import Link from 'next/link'
 import Icon from '@/components/ui/Icon'
 import Image from 'next/image'
+import ContactModal from '@/components/modals/ContactModal'
 
 export default function Footer() {
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+
   return (
     <footer id="about" className="relative bg-black pt-24 pb-0 border-t border-white/5 overflow-hidden">
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-900/20 to-transparent rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
@@ -24,7 +29,7 @@ export default function Footer() {
                   />
                 </div>
                 <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
-                  <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span>
+                  <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#2894D9' }}>LYF</span>
                 </h2>
               </div>
               <p className="text-lg font-medium text-primary italic">
@@ -37,7 +42,7 @@ export default function Footer() {
                 Our Mission
               </h3>
               <p className="text-slate-300 leading-relaxed text-base font-medium">
-                Transforming respiratory care through intelligent, multi-determinant analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.
+                Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.
               </p>
             </div>
           </div>
@@ -61,12 +66,12 @@ export default function Footer() {
               
               <div className="relative z-10 mt-auto">
                 <button className="w-full flex items-center justify-center gap-3 bg-white text-[#101622] rounded-xl px-4 py-3 hover:bg-gray-100 transition-colors group">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.21-1.96 1.07-3.11-1.05.05-2.31.71-3.06 1.61-.69.82-1.27 2-1.08 3.15 1.19.09 2.42-.83 3.07-1.65z"></path>
                   </svg>
                   <div className="text-left">
                     <div className="text-[10px] font-semibold uppercase tracking-wider leading-none"></div>
-                    <div className="text-base font-bold leading-none mt-0.5">Download Now</div>
+                    <div className="text-lg font-bold leading-none mt-0.5">Stay Tuned</div>
                   </div>
                 </button>
               </div>
@@ -85,9 +90,12 @@ export default function Footer() {
               <li>Partnership inquiries?</li>
               <li>Healthcare provider collaboration?</li>
             </ul>
-            <a className="inline-flex items-center gap-1.5 text-primary font-bold hover:gap-3 transition-all" href="#">
+            <button 
+              onClick={() => setIsContactModalOpen(true)}
+              className="inline-flex items-center gap-1.5 text-primary font-bold hover:gap-3 transition-all"
+            >
               Get in Touch <Icon name="arrow_forward" size={18} className="text-primary" />
-            </a>
+            </button>
           </div>
         </div>
 
@@ -105,14 +113,15 @@ export default function Footer() {
       <div className="bg-[#101622] border-t border-white/5 py-6 px-6 md:px-10 lg:px-12">
         <div className="mx-auto max-w-[1280px] flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-slate-400 text-sm font-medium text-center md:text-left">
-            © 2025 <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span>. All rights reserved. <span className="mx-2 text-slate-600">|</span>
-            <a className="text-slate-400 hover:text-white transition-colors" href="#">Privacy Policy</a> <span className="mx-2 text-slate-600">|</span>
-            <a className="text-slate-400 hover:text-white transition-colors" href="#">Terms of Service</a>
+            © 2025 <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#2894D9' }}>LYF</span>. All rights reserved. <span className="mx-2 text-slate-600"></span>
+            {/* © 2025 <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#2894D9' }}>LYF</span>. All rights reserved. <span className="mx-2 text-slate-600">|</span> */}
+            {/* <Link className="text-slate-400 hover:text-white transition-colors" href="/privacy-policy">Privacy Policy</Link> <span className="mx-2 text-slate-600">|</span>
+            <Link className="text-slate-400 hover:text-white transition-colors" href="/terms-of-service">Terms of Service</Link> */}
           </p>
           <div className="flex items-center gap-5">
             <a 
               className="text-slate-400 hover:text-white transition-colors" 
-              href="https://twitter.com/respirelyf" 
+              href="https://x.com/RespireLYF" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="Follow Respire LYF on X (Twitter)"
@@ -121,16 +130,7 @@ export default function Footer() {
             </a>
             <a 
               className="text-slate-400 hover:text-white transition-colors" 
-              href="https://reddit.com/r/respirelyf" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              aria-label="Follow Respire LYF on Reddit"
-            >
-              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"></path></svg>
-            </a>
-            <a 
-              className="text-slate-400 hover:text-white transition-colors" 
-              href="https://www.facebook.com/respirelyf" 
+              href="https://www.facebook.com/profile.php?id=61581530281991" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="Follow Respire LYF on Facebook"
@@ -139,7 +139,7 @@ export default function Footer() {
             </a>
             <a 
               className="text-slate-400 hover:text-white transition-colors" 
-              href="https://www.instagram.com/respirelyf" 
+              href="https://www.instagram.com/respire.lyf?igsh=MTVmc2IwNGxyc2Zwdw%3D%3D" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="Follow Respire LYF on Instagram"
@@ -148,7 +148,7 @@ export default function Footer() {
             </a>
             <a 
               className="text-slate-400 hover:text-white transition-colors" 
-              href="https://www.youtube.com/@respirelyf" 
+              href="https://www.youtube.com/@respirelyf?si=_wfm8TUsYALWBU3k" 
               target="_blank" 
               rel="noopener noreferrer"
               aria-label="Subscribe to Respire LYF on YouTube"
@@ -158,6 +158,12 @@ export default function Footer() {
           </div>
         </div>
       </div>
+
+      {/* Contact Modal */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
     </footer>
   )
 }

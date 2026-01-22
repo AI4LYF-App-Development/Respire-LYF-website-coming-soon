@@ -15,86 +15,100 @@ interface DeterminantModalProps {
   iconName?: string
 }
 
+// Map card IDs to PDF filenames
+const pdfMap: Record<string, string> = {
+  inhaler: 'Inhaler Use.pdf',
+  medications: 'Medication.pdf',
+  supplements: 'Supplements.pdf',
+  food: 'Food.pdf',
+  weather: 'Weather.pdf',
+  environmental: 'Environental Factors.pdf',
+  hydration: 'Hydration.pdf',
+  activity: 'Activity.pdf',
+  sleep: 'Sleep.pdf',
+  // stress: No PDF available
+}
+
 const determinantContent: Record<string, { title: string; content: string }> = {
   inhaler: {
     title: 'Inhaler Use',
-    content: `Your inhaler worked perfectly at the doctor's office. At 3 AM during an attack? Research shows 87% of patients make technique errors that can reduce medication delivery by half or more.
-
-The three most common errors—skipping the exhale, mistiming the press, rushing the breath-hold—look different on every device type. And they get worse under stress, precisely when technique matters most.
-
-Read the full paper to discover your device-specific error patterns and what research shows actually reaches your lungs.`
+    content: `Why do most people's inhalers fail them, even when taking every dose?
+Studies show 86% make technique errors that reduce lung delivery by over 60%—meaning most doses never reach your airways.
+After 40 years of education, only 31% use the correct technique, while non-adherence causes 60-80% of preventable attacks.
+Your inhaler fails when stress makes you rush, poor sleep kills consistency, or daily chaos disrupts the precise technique needed for medicine to reach the lungs instead of the air.
+Find out why your inhaler isn't working like it should in the magazine.`
   },
   supplements: {
     title: 'Supplements',
-    content: `Meta-analyses show vitamin D deficiency is associated with higher exacerbation rates and reduced lung function, with the strongest benefits from supplementation seen in those with baseline deficiency.
-
-N-acetylcysteine doesn't work like drugstore expectorants. It breaks disulfide bonds in mucus proteins at the molecular level—and research documents up to 5-fold variation in individual response based on genetics and disease phenotype.
-
-Read the full paper to discover which supplements have clinical evidence, why identical doses produce different results, and how to track what actually works for your biology.`
+    content: `That daily vitamin might be helping or hurting your breathing.
+Research on omega-3s, vitamin D, and magnesium shows variable respiratory effects based on individual biology.
+Supplement timing affects medication absorption. Some enhance, others interfere; effects vary by genetics.
+Supplements work within your complete picture: diet, stress, sleep, and medications determine effectiveness.
+Learn how supplements influence your breathing quality in the magazine.`
   },
   medications: {
     title: 'Medication',
-    content: `Your 3 PM dose may outperform your 8 AM dose—same medication, same milligrams, dramatically different results. But standard dosing is built around convenience, not your circadian biology.
-
-Genetic variants like ADRB2 polymorphisms influence how you respond to beta-agonists, and factors like smoking status can change how fast your body clears medications—creating response patterns your prescription can't predict.
-
-Read the full paper to learn what chronobiology research reveals about dosing windows, why individual responses vary so dramatically, and how tracking your patterns can inform conversations with your healthcare provider.`
+    content: `What if the timing of your pill matters more than the pill itself?
+Your body clock changes how medication works. Afternoon doses (3-4 PM) might protect your lungs better at night than morning doses.
+Half of patients don't take meds as prescribed, and every missed dose pushes you closer to the hospital—adherence literally predicts survival.
+Here's what steals medication power: eating at the wrong time blocks absorption, supplements interfere, poor sleep weakens effects, and stress makes everything worse.
+Find out how medication timing shapes your breathing in the magazine.`
   },
   sleep: {
     title: 'Sleep',
-    content: `Poor sleep on Monday = breathing problems on Wednesday. Research shows 75% of asthmatics suffer nighttime symptoms, yet the inflammation from bad sleep doesn't peak until 48 hours later.
-
-Your lung function naturally drops 8-20% between 3-6 AM. And they get worse under stress, when your circadian rhythm is already disrupted, and inflammation is peaking.
-
-Read the full magazine to discover your personal sleep-symptom lag pattern and what research shows actually improves overnight breathing.`
+    content: `Ever wonder why some nights you breathe easy, while others feel impossible?
+75% of people with asthma report worse nighttime symptoms. Research shows your lung function naturally drops during sleep due to your body's internal clock.
+Sleep under 5 hours = 1.5x higher breathing struggles next day. It's a bidirectional relationship: breathing problems disrupt your sleep, and then sleep loss worsens breathing issues.
+Sleep doesn't affect breathing alone—it's the master switch controlling stress hormones, food cravings, hydration levels, and medication consistency that collectively determine your respiratory health.
+Uncover the sleep secrets sabotaging your breathing every night in the magazine.`
   },
   stress: {
     title: 'Stress',
-    content: `That work presentation made your rescue inhaler significantly less effective for 2 days. Studies show stress reduces beta-receptor sensitivity for 24-48 hours. Chronic stress? Up to 9.5-fold reduction in medication receptors.
-
-The three biggest triggers—work deadlines, caregiving stress, and financial anxiety—show different patterns for each individual. And they get worse under poor sleep, when your cortisol is already dysregulated.
-
-Read the full magazine to discover your stress-inflammation timeline and what research shows actually interrupts the cascade before symptoms hit.`
+    content: `Why does stress tighten your chest—even when sitting still?
+Chronic stress can make your rescue inhaler up to 9.5x less effective—it literally changes how your body responds to the medication you depend on.
+Stress weakens your immune system, making you more vulnerable to infections (the #1 trigger of breathing emergencies) and increasing flare-up risk over 4x.
+Stress is the invisible connector: it ruins your sleep, drives unhealthy food cravings, dehydrates you, and makes you forget medications—all working together to steal your breath.
+See how stress is hijacking your lungs without you knowing in the magazine.`
   },
   food: {
     title: 'Food',
-    content: `One high-fat meal triggers airway inflammation in 4 hours AND blocks your inhaler. Research proves it increases sputum neutrophils and impairs bronchodilator recovery. Meanwhile, 5-10% of asthmatics are sulfite-sensitive and don't know it.
-
-The three most common triggers—high-fat dinners, sulfite-rich wines, histamine-loaded aged cheeses—look different in every gut microbiome. And they get worse under dehydration, when mucus is already concentrated.
-
-Read the full magazine to discover your food-symptom interaction patterns and what research shows actually reduces airway inflammation through diet.`
+    content: `Why does breathing feel harder after certain meals?
+High-fat meals can trigger airway inflammation within 4 hours and reduce bronchodilator response up to 50%.
+5-10% show sensitivity to sulfites in foods, while fiber influences gut bacteria that communicate with lung immunity.
+Meal timing shapes your breathing fingerprint. Late meals cause reflux, large portions compress lungs, and inflammatory foods amplify the breathing damage from stress and poor sleep.
+Decode the food-breathing connection no one talks about in the magazine.`
   },
   hydration: {
     title: 'Hydration',
-    content: `Your body releases histamine when dehydrated—the same molecule that causes allergic reactions—triggering bronchoconstriction to conserve water. Research shows just 2-3% body weight dehydration measurably increases mucus viscosity and impairs clearance.
-
-The three biggest mistakes—random sipping, wrong timing, and ignoring exercise losses—look different for every activity level. And they get worse overnight, when mucus concentrates and clearance drops.
-
-Read the full magazine to discover your personal hydration windows and what research shows actually optimizes mucociliary clearance.`
+    content: `Your airways need water to work: here's what happens when they don't get it.
+Studies link dehydration to increased cough frequency in children with asthma, yet it's rarely discussed.
+Airways depend on a thin liquid layer (about 7 micrometers) for defense. Dehydration thickens mucus and slows this protective clearance system.
+Hydration timing works with sleep cycles, exercise, stress, and medications to support breathing.
+Discover how hydration changes everything for your lungs in the magazine.`
   },
   weather: {
     title: 'Weather',
-    content: `Your COPD flares twice as often in winter—but it may not be the cold itself. Research shows temperature swings and barometric pressure shifts trigger more symptoms than steady cold or heat.
-
-Your lung function naturally dips 5-8% overnight, bottoming out around 4 AM. When that circadian low collides with a cold front or humidity spike, you're in your most vulnerable window—and most people never see it coming.
-
-Read the full paper to learn which weather variables research links to respiratory symptoms, why individual trigger patterns vary dramatically, and how tracking your personal combinations can inform conversations with your clinician.`
+    content: `Why does the weather affect your breathing differently every time?
+COPD flare-ups are 2.16x higher in winter, and extreme cold is linked to 20% higher asthma attack risk.
+Hot, humid air triggers measurable airway constriction through nerve reflexes—it's biological, not anxiety.
+The secret: weather combines with your sleep, stress, and hydration levels, creating unique patterns that explain why the same forecast affects you differently each time.
+Find out what the weather really does to your airways in the magazine.`
   },
   environmental: {
     title: 'Environmental Factors',
-    content: `Same neighborhood, dramatically different reactions—research shows individual responses to identical environmental conditions can vary up to 5-fold based on genetics, sensitization, and what else you're exposed to that day.
-
-Pollen seasons now start 20 days earlier than in 1990, with concentrations up 21%. And ozone doesn't just add to pollen's effects—studies suggest combined exposures can amplify airway inflammation beyond either trigger alone. Your "bad allergy years" are now the baseline.
-
-Read the full paper to learn which environmental combinations research links to respiratory symptoms, why standard AQI alerts miss personal trigger patterns, and how multi-factor tracking can reveal what generic forecasts can't.`
+    content: `The air looks clear so why can't you breathe?
+Pollen seasons are now 20 days longer with 21% higher concentrations than three decades ago. Climate change is making invisible triggers worse.
+Air pollution increases coughing within the same hour of exposure; your airways react in real-time to what you can't see.
+Moderate pollen plus moderate ozone plus poor sleep triggers severe symptoms when none alone would, revealing why "bad air days" affect you differently each time.
+Discover the invisible triggers in every breath you take in the magazine.`
   },
   activity: {
     title: 'Activity',
-    content: `47% lower mortality, 34% fewer hospital readmissions—research shows physical activity is the strongest predictor of survival in COPD. But if you're among the 40-90% of asthmatics who experience exercise-induced symptoms, the wrong approach might trigger the inflammation you're trying to prevent.
-
-The difference between benefit and setback often comes down to variables that generic guidelines ignore: warm-up duration, environmental conditions, hydration, medication timing, and your current fitness baseline. Studies show a proper warm-up can create a 1-2 hour protective window—but only if it's calibrated to your response pattern.
-
-Read the full paper to learn which exercise approaches research links to respiratory improvement, how to recognize your personal response patterns, and the preparation strategies that can make activity safer and more effective for your biology.`
+    content: `Why does exercise feel easy one day, impossible the next?
+Active COPD patients show 34% lower readmissions and 47% lower mortality than inactive patients.
+40-90% get exercise-induced bronchoconstriction, but proper warm-up creates 1-2 hour protection.
+Success depends on medication timing, hydration, sleep, food, and your body's daily rhythm working together.
+Uncover your personal exercise-breathing patterns in the magazine.`
   }
 }
 
@@ -105,6 +119,7 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
   
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const content = cardId ? determinantContent[cardId] : null
 
@@ -144,13 +159,157 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
       return
     }
     
+    setIsLoading(true)
+    setErrors({})
+    
+    const apiUrl = '/api/waitlist'
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+    const requestBody = {
+      email: formData.email,
+      source: 'WEBSITE',
+      timezone: userTimezone
+    }
+    
+    console.log('🚀 [DeterminantModal] API Call Started:', {
+      url: apiUrl,
+      method: 'POST',
+      body: requestBody,
+      cardId,
+      cardName,
+      timestamp: new Date().toISOString()
+    })
+    
     try {
-      // Here you would typically send the email to your API
-      // For now, we'll just show success
-      setIsSubmitted(true)
-      setFormData({ email: '' })
+      // Submit email to waitlist API
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      })
+      
+      console.log('📡 [DeterminantModal] API Response Received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries()),
+        timestamp: new Date().toISOString()
+      })
+      
+      let data: any = {}
+      try {
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          data = await response.json()
+        } else {
+          const text = await response.text()
+          console.warn('⚠️ [DeterminantModal] Non-JSON response:', text)
+          data = { detail: text || `Server returned status ${response.status}` }
+        }
+      } catch (parseError) {
+        console.error('⚠️ [DeterminantModal] Failed to parse response:', parseError)
+        data = { detail: `Server returned status ${response.status}` }
+      }
+      
+      console.log('📦 [DeterminantModal] Response Data:', {
+        data,
+        timestamp: new Date().toISOString()
+      })
+      
+      // Handle success responses (200 OK or 201 Created)
+      if (response.status === 200 || response.status === 201) {
+        console.log('✅ [DeterminantModal] Success:', {
+          status: response.status,
+          message: data.detail || 'Email submitted successfully',
+          email: formData.email,
+          cardId,
+          cardName,
+          timestamp: new Date().toISOString()
+        })
+        
+        // Open the PDF in a new tab if available
+        if (cardId && pdfMap[cardId]) {
+          const pdfPath = `/Determinenet_pdf/${pdfMap[cardId]}`
+          console.log('📄 [DeterminantModal] Opening PDF:', {
+            pdfPath,
+            cardId,
+            timestamp: new Date().toISOString()
+          })
+          window.open(pdfPath, '_blank')
+          // Close the modal after opening PDF
+          setFormData({ email: '' })
+          setErrors({})
+          onClose()
+        } else {
+          console.log('ℹ️ [DeterminantModal] No PDF available for card:', {
+            cardId,
+            timestamp: new Date().toISOString()
+          })
+          // If no PDF available, show success message
+          setIsSubmitted(true)
+          setFormData({ email: '' })
+        }
+      } else {
+        // Handle API errors (400, 402, 422, 500, 503, 504)
+        let errorMessage = 'Something went wrong. Please try again.'
+        
+        if (data.detail) {
+          // Handle 422 where detail is an array of error objects
+          if (Array.isArray(data.detail)) {
+            const errorDescriptions = data.detail.map((err: any) => 
+              err.error_description || err.field ? `${err.field}: ${err.error_description}` : JSON.stringify(err)
+            ).join(', ')
+            errorMessage = errorDescriptions || 'Validation error. Please check your input.'
+          } else {
+            // Regular error message
+            errorMessage = data.detail
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        
+        console.error('❌ [DeterminantModal] API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorMessage,
+          data,
+          cardId,
+          timestamp: new Date().toISOString()
+        })
+        setErrors({ submit: errorMessage })
+      }
     } catch (error) {
-      setErrors({ submit: 'Something went wrong. Please try again.' })
+      let errorMessage = 'Network error. Please check your connection and try again.'
+      
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        // Likely a CORS issue
+        errorMessage = 'Unable to connect to the server. This may be a CORS (Cross-Origin) issue. Please contact support.'
+        console.error('🚫 [DeterminantModal] CORS Error Detected:', {
+          error: error.message,
+          suggestion: 'Consider using a Next.js API route as a proxy',
+          cardId,
+          timestamp: new Date().toISOString()
+        })
+      } else if (error instanceof Error) {
+        errorMessage = `Error: ${error.message}`
+      }
+      
+      console.error('💥 [DeterminantModal] Network/Exception Error:', {
+        error,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        cardId,
+        timestamp: new Date().toISOString()
+      })
+      setErrors({ submit: errorMessage })
+    } finally {
+      setIsLoading(false)
+      console.log('🏁 [DeterminantModal] API Call Completed:', {
+        cardId,
+        timestamp: new Date().toISOString()
+      })
     }
   }
 
@@ -208,7 +367,7 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                       ) : null}
                     </div>
                   )}
-                  <h2 className="text-2xl font-bold text-gray-900 text-center">
+                  <h2 className="text-2xl font-bold text-gray-900 text-center uppercase">
                     {isSubmitted ? "Thank you!" : content.title}
                   </h2>
                 </div>
@@ -228,11 +387,36 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                 ) : (
                   <>
                     <div className="mb-6 space-y-4">
-                      {content.content.split('\n\n').map((paragraph, index) => (
-                        <p key={index} className="text-gray-700 leading-relaxed">
-                          {paragraph}
-                        </p>
-                      ))}
+                      {(() => {
+                        const lines = content.content.split('\n').filter(line => line.trim())
+                        const question = lines[0] // First line is the question
+                        const bulletPoints = lines.slice(1, -1) // Middle lines are bullet points
+                        const callToAction = lines[lines.length - 1] // Last line is call to action
+                        
+                        return (
+                          <>
+                            {/* Leading Question */}
+                            <p className="text-gray-900 font-bold leading-relaxed mb-4">
+                              {question}
+                            </p>
+                            
+                            {/* Bullet Points */}
+                            <ul className="space-y-3 mb-4">
+                              {bulletPoints.map((point, index) => (
+                                <li key={index} className="text-gray-700 leading-relaxed flex items-start">
+                                  <span className="text-gray-900 mr-2 mt-1.5">•</span>
+                                  <span>{point}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            
+                            {/* Call to Action (Bold) */}
+                            <p className="text-gray-900 font-bold  leading-relaxed">
+                              {callToAction}
+                            </p>
+                          </>
+                        )
+                      })()}
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6 border-t border-gray-200 pt-6">
@@ -246,10 +430,10 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                           name="email"
                           value={formData.email}
                           onChange={handleChange}
-                          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-[#2894D9] ${
                             errors.email ? 'border-red-500' : 'border-gray-300'
                           }`}
-                          placeholder="email@example.com"
+                          placeholder="you@example.com"
                         />
                         {errors.email && (
                           <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -264,9 +448,10 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                       
                       <button
                         type="submit"
-                        className="w-full px-6 py-3 bg-[#2894D9] text-white rounded-lg font-semibold hover:bg-[#217cb8] transition-colors"
+                        disabled={isLoading}
+                        className="w-full px-6 py-3 bg-[#2894D9] hover:bg-[#217cb8] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors"
                       >
-                        Read Magazine
+                        {isLoading ? 'Submitting...' : 'Read Magazine'}
                       </button>
                     </form>
                   </>

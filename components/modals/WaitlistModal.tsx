@@ -19,6 +19,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
   
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   // When opened with a prefill email + forceSubmitted, jump straight to success
   useEffect(() => {
@@ -57,25 +58,129 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
       return
     }
     
+    setIsLoading(true)
+    setErrors({})
+    
+    const apiUrl = '/api/waitlist'
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+    const requestBody = {
+      email: formData.email,
+      source: 'WEBSITE',
+      timezone: userTimezone
+    }
+    
+    console.log('🚀 [WaitlistModal] API Call Started:', {
+      url: apiUrl,
+      method: 'POST',
+      body: requestBody,
+      timestamp: new Date().toISOString()
+    })
+    
     try {
-      const response = await fetch('/api/waitlist', {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
+          'accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestBody),
       })
       
-      if (response.ok) {
+      console.log('📡 [WaitlistModal] API Response Received:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok,
+        headers: Object.fromEntries(response.headers.entries()),
+        timestamp: new Date().toISOString()
+      })
+      
+      let data: any = {}
+      try {
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          data = await response.json()
+        } else {
+          const text = await response.text()
+          console.warn('⚠️ [WaitlistModal] Non-JSON response:', text)
+          data = { detail: text || `Server returned status ${response.status}` }
+        }
+      } catch (parseError) {
+        console.error('⚠️ [WaitlistModal] Failed to parse response:', parseError)
+        data = { detail: `Server returned status ${response.status}` }
+      }
+      
+      console.log('📦 [WaitlistModal] Response Data:', {
+        data,
+        timestamp: new Date().toISOString()
+      })
+      
+      // Handle success responses (200 OK or 201 Created)
+      if (response.status === 200 || response.status === 201) {
+        console.log('✅ [WaitlistModal] Success:', {
+          status: response.status,
+          message: data.detail || 'Email submitted successfully',
+          email: formData.email,
+          timestamp: new Date().toISOString()
+        })
         setIsSubmitted(true)
         setFormData({
           email: '',
         })
       } else {
-        setErrors({ submit: 'Something went wrong. Please try again.' })
+        // Handle API errors (400, 402, 422, 500, 503, 504)
+        let errorMessage = 'Something went wrong. Please try again.'
+        
+        if (data.detail) {
+          // Handle 422 where detail is an array of error objects
+          if (Array.isArray(data.detail)) {
+            const errorDescriptions = data.detail.map((err: any) => 
+              err.error_description || err.field ? `${err.field}: ${err.error_description}` : JSON.stringify(err)
+            ).join(', ')
+            errorMessage = errorDescriptions || 'Validation error. Please check your input.'
+          } else {
+            // Regular error message
+            errorMessage = data.detail
+          }
+        } else if (data.message) {
+          errorMessage = data.message
+        }
+        
+        console.error('❌ [WaitlistModal] API Error:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorMessage,
+          data,
+          timestamp: new Date().toISOString()
+        })
+        setErrors({ submit: errorMessage })
       }
     } catch (error) {
-      setErrors({ submit: 'Network error. Please try again.' })
+      let errorMessage = 'Network error. Please check your connection and try again.'
+      
+      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+        // Likely a CORS issue
+        errorMessage = 'Unable to connect to the server. This may be a CORS (Cross-Origin) issue. Please contact support.'
+        console.error('🚫 [WaitlistModal] CORS Error Detected:', {
+          error: error.message,
+          suggestion: 'Consider using a Next.js API route as a proxy',
+          timestamp: new Date().toISOString()
+        })
+      } else if (error instanceof Error) {
+        errorMessage = `Error: ${error.message}`
+      }
+      
+      console.error('💥 [WaitlistModal] Network/Exception Error:', {
+        error,
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        timestamp: new Date().toISOString()
+      })
+      setErrors({ submit: errorMessage })
+    } finally {
+      setIsLoading(false)
+      console.log('🏁 [WaitlistModal] API Call Completed:', {
+        timestamp: new Date().toISOString()
+      })
     }
   }
   
@@ -153,10 +258,10 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-[#2894D9] ${
                           errors.email ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="email@example.com"
+                        placeholder="you@example.com"
                       />
                       {errors.email && (
                         <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -172,7 +277,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
                     
                     <button
                       type="submit"
-                      className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                      className="w-full px-6 py-3 bg-[#2894D9] hover:bg-[#217cb8] text-white rounded-lg font-semibold transition-colors"
                     >
                       Get Early Access
                     </button>

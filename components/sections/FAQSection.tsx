@@ -11,7 +11,7 @@ export default function FAQSection() {
   const faqs = [
     {
       question: 'How does MD-RIC work?',
-      answer: 'MD-RIC (Multi-Determinant Respiratory Intelligence Co-Pilot) automatically tracks 10 health determinants and 5 indicators, then uses AI to identify patterns and correlations that explain your breathing patterns.',
+      answer: 'MD-RIC (All-in-One Respiratory Co-Pilot) automatically tracks 10 health determinants and 5 indicators, then uses AI to identify patterns and correlations that explain your breathing patterns.',
     },
     {
       question: 'Do I need additional hardware?',

@@ -36,7 +36,7 @@ export default function MDRIC() {
           
           <ScrollReveal delay={0.1}>
             <p className="text-xl text-gray-700 text-center mb-12 max-w-3xl mx-auto">
-              Multi-Determinant Respiratory Intelligence Co-Pilot
+              All-in-One Respiratory Co-Pilot
             </p>
           </ScrollReveal>
           

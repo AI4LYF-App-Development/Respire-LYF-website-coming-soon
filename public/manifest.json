@@ -1,0 +1,40 @@
+{
+  "name": "Respire LYF - All-in-One Respiratory Co-Pilot",
+  "short_name": "Respire LYF",
+  "description": "Transform scattered symptoms into clear patterns. Discover your personal respiratory fingerprint. Track everything free, understand everything premium.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2894D9",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/respirelyf_logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/respirelyf_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["health", "medical", "lifestyle"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Join Waitlist",
+      "short_name": "Waitlist",
+      "description": "Join the Respire LYF waitlist",
+      "url": "/?action=waitlist",
+      "icons": [
+        {
+          "src": "/icons/respirelyf_logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ]
+}
