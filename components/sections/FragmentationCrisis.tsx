@@ -156,7 +156,7 @@ export default function FragmentationCrisis() {
                     <Image src="/icons/respirelyf_logo.png" alt="Respire LYF" width={60} height={60} className="relative z-10 object-contain drop-shadow-[0_8px_18px_rgba(13,153,255,0.35)]" />
                   </div>
                   <div className="absolute top-20 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                    <span className="text-sm font-bold text-primary whitespace-nowrap bg-white/90 dark:bg-slate-800/90 backdrop-blur px-3 py-1 rounded-full shadow-sm border border-primary/20 dark:border-primary/30">Respire LYF™</span>
+                    <span className="text-sm font-bold text-primary whitespace-nowrap bg-white/90 dark:bg-slate-800/90 backdrop-blur px-3 py-1 rounded-full shadow-sm border border-primary/20 dark:border-primary/30"><span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span>™</span>
                     <span className="text-[10px] text-slate-500 mt-1">Live Your Fullest</span>
                   </div>
                   <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-white text-primary text-[10px] font-bold h-8 px-3.5 rounded-full shadow-md flex items-center justify-center gap-1.5 border border-primary ring-2 ring-primary/20 whitespace-nowrap leading-none">

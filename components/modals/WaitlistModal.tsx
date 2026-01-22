@@ -130,7 +130,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
                     className="text-center py-8 space-y-2"
                   >
                     <p className="text-lg text-gray-700 max-w-2xl mx-auto mt-0 -mt-8">
-                      Thanks for joining Respire LYF. Early users help shape how this platform evolves.
+                      Thanks for joining <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span>. Early users help shape how this platform evolves.
                     </p>
                     <div className="space-y-2 text-left max-w-xl mx-auto text-gray-800">
                       <p className="font-bold">What happens next:</p>

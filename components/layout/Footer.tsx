@@ -24,7 +24,7 @@ export default function Footer() {
                   />
                 </div>
                 <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white">
-                  Respire LYF
+                  <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span>
                 </h2>
               </div>
               <p className="text-lg font-medium text-primary italic">
@@ -105,7 +105,7 @@ export default function Footer() {
       <div className="bg-[#101622] border-t border-white/5 py-6 px-6 md:px-10 lg:px-12">
         <div className="mx-auto max-w-[1280px] flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-slate-400 text-sm font-medium text-center md:text-left">
-            © 2025 Respire LYF. All rights reserved. <span className="mx-2 text-slate-600">|</span>
+            © 2025 <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span>. All rights reserved. <span className="mx-2 text-slate-600">|</span>
             <a className="text-slate-400 hover:text-white transition-colors" href="#">Privacy Policy</a> <span className="mx-2 text-slate-600">|</span>
             <a className="text-slate-400 hover:text-white transition-colors" href="#">Terms of Service</a>
           </p>

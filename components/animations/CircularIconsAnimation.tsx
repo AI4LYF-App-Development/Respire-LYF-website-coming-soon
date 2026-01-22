@@ -43,29 +43,30 @@ const KPIS: IconData[] = [
 
 const ALL_ICONS: IconData[] = [...DETERMINANTS, ...KPIS]
 
+
 // Calculate angle for each icon based on Swift logic - equal spacing around full circle
 function calculateIconAngle(index: number, totalIcons: number, isKPI: boolean): number {
   // Calculate equal spacing: full circle (2π) divided by total number of icons
   // Each icon gets equal arc space
   const anglePerIcon = (2.0 * Math.PI) / totalIcons
-  
+
   // Start from 12 o'clock (270° = 3π/2) and distribute evenly anti-clockwise
   // Canvas/SVG coordinate system: 0° = right (3 o'clock), 90° = bottom (6 o'clock), 
   // 180° = left (9 o'clock), 270° = top (12 o'clock)
   // Anti-clockwise from 12 o'clock: 270° → 246° → 222° → ... → 0° → 330° → 306° → 270°
   const startAngle = (3.0 * Math.PI) / 2.0  // 270° (12 o'clock) - start from top
-  
+
   // Calculate angle for this icon: start from top and go anti-clockwise (subtract)
   // Index 0 starts at 12 o'clock, then each subsequent icon is spaced evenly anti-clockwise
   let calculatedAngle = startAngle - (index * anglePerIcon)
-  
+
   // Normalize to 0-2π range (handle negative values when going anti-clockwise)
   if (calculatedAngle < 0) {
     calculatedAngle = calculatedAngle + 2.0 * Math.PI
   } else if (calculatedAngle >= 2.0 * Math.PI) {
     calculatedAngle = calculatedAngle - 2.0 * Math.PI
   }
-  
+
   return calculatedAngle
 }
 
@@ -90,11 +91,20 @@ export default function CircularIconsAnimation({
       {ALL_ICONS.map((icon, index) => {
         const isVisible = visibleIconIndices.has(index)
         const angle = calculateIconAngle(index, ALL_ICONS.length, icon.isKPI)
+
+        // Calculate circle position (where icon should be when visible)
+        const circleX = circleRadius * Math.cos(angle)
+        const circleY = circleRadius * Math.sin(angle)
+
+        // ICON APPEARING ANIMATION:
+        // Start: center (0, 0, scale: 0.3, opacity: 0)
+        // End: circle (circleX, circleY, scale: 1, opacity: 1)
         
-        // Calculate position based on angle and radius (relative to center)
-        const offsetX = circleRadius * Math.cos(angle)
-        const offsetY = circleRadius * Math.sin(angle)
-        
+        const targetX = isVisible ? circleX : 0
+        const targetY = isVisible ? circleY : 0
+        const targetOpacity = isVisible ? 1 : 0
+        const targetScale = isVisible ? 1 : 0.3
+
         return (
           <motion.div
             key={index}
@@ -102,25 +112,24 @@ export default function CircularIconsAnimation({
             style={{
               left: '50%',
               top: '50%',
-              transform: 'translate(-50%, -50%)',
             }}
-            initial={{ 
-              opacity: 0, 
+            initial={{
+              opacity: 0,
               scale: 0.3,
               x: 0,
               y: 0,
             }}
             animate={{
-              opacity: isVisible ? 1 : 0,
-              scale: isVisible ? 1 : 0.3,
-              x: isVisible ? offsetX : 0,
-              y: isVisible ? offsetY : 0,
+              opacity: targetOpacity,
+              scale: targetScale,
+              x: targetX,
+              y: targetY,
             }}
             transition={{
-              duration: 0.8,
+              // EXACT SAME spring animation as appearing
               type: 'spring',
-              stiffness: 100,
-              damping: 15,
+              stiffness: 120,
+              damping: 18,
             }}
           >
             <div
@@ -143,6 +152,6 @@ export default function CircularIconsAnimation({
           </motion.div>
         )
       })}
-    </div>
+    </div >
   )
 }

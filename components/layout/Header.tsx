@@ -67,7 +67,7 @@ export default function Header() {
               priority
             />
           </div>
-          <span className="text-lg font-bold tracking-tight text-figma-dark">Respire LYF</span>
+          <span className="text-lg font-bold tracking-tight text-figma-dark"><span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#256096' }}>LYF</span></span>
         </Link>
         
         <nav className="hidden md:flex items-center gap-2">

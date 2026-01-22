@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Icon from '@/components/ui/Icon'
+import DeterminantModal from '@/components/modals/DeterminantModal'
 
 // ============================================================================
 // DATA & CONSTANTS
@@ -49,7 +50,7 @@ const determinants = [
   },
   {
     id: 'environmental',
-    name: 'Environmental Factors',
+    name: 'Env. Factors',
     icon: 'air',
     description: 'Not all respiratory triggers are obvious or visible. Identify everyday exposures that quietly affect lung health.',
     image: '/images/determinants/envirnmental_bg.jpg',
@@ -112,34 +113,6 @@ type Determinant = typeof determinants[0]
 // ============================================================================
 
 /**
- * Gets all cards in order, excluding the featured card
- */
-function getCardsInOrder(selectedId: string | null): Determinant[] {
-  return CARD_ORDER
-    .filter(id => id !== selectedId)
-    .map(id => determinants.find(d => d.id === id))
-    .filter((card): card is Determinant => card !== undefined)
-}
-
-/**
- * Organizes cards into layout structure based on selected featured card
- */
-function organizeCards(selectedId: string | null) {
-  const otherCards = getCardsInOrder(selectedId)
-  
-  return {
-    featured: determinants.find(d => d.id === selectedId) || determinants[0],
-    row1: [otherCards[0], otherCards[1]], // Medications, Supplements
-    food: otherCards[2], // Food
-    row2: [otherCards[3], otherCards[4], otherCards[5]], // Weather, Environmental, Hydration
-    row3: [otherCards[6], otherCards[7], otherCards[8]], // Activity, Sleep, Stress
-    // Dynamic spanning: Weather spans 2 when Environmental is featured, Sleep spans 2 when Stress is featured
-    weatherSpans2: selectedId === 'environmental',
-    sleepSpans2: selectedId === 'stress',
-  }
-}
-
-/**
  * Renders card icon (image or icon component)
  */
 function renderIcon(card: Determinant, size: number = 24, className: string = 'text-slate-500') {
@@ -157,280 +130,68 @@ function renderIcon(card: Determinant, size: number = 24, className: string = 't
   return <Icon name={card.icon} size={size} className={className} />
 }
 
-/**
- * Renders card badge based on card type
- */
-function renderBadge(card: Determinant, isFeatured: boolean = false) {
-  if (!card.badge) return null
-
-  // Sleep badge (special styling)
-  if (card.id === 'sleep') {
-    return (
-      <div className="bg-white text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20 shadow-sm">
-        {card.badge}
-      </div>
-    )
-  }
-
-  // Badge with label (e.g., AQI Good) - styled like Sleep badge
-  if (card.badgeLabel) {
-    return (
-      <div className="bg-white text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20 shadow-sm">
-        <span className="uppercase tracking-wider">{card.badgeLabel}</span> {card.badge}
-      </div>
-    )
-  }
-
-  // Weather badge (temperature) - styled like Sleep badge
-  if (card.id === 'weather') {
-    return (
-      <div className="bg-white text-primary px-3 py-1 rounded-full text-xs font-bold border border-primary/20 shadow-sm">
-        {card.badge}
-      </div>
-    )
-  }
-
-  // Hydration badge
-  if (card.id === 'hydration') {
-    return (
-      <span className="text-sm font-bold text-blue-600 bg-white/50 backdrop-blur-sm px-2 py-1 rounded-md">1.2L</span>
-    )
-  }
-
-  // Default badge fallback
-  return (
-    <span className={`${isFeatured ? 'text-2xl' : 'text-2xl'} font-bold text-slate-800`}>
-      {card.badge}
-    </span>
-  )
-}
-
-/**
- * Renders action buttons (Read Magazine, Watch Video)
- */
-function renderButtons(isLarge: boolean = false) {
-  const buttonClasses = isLarge
-    ? 'bg-primary hover:bg-primary-light text-white text-xs font-bold py-2.5 px-4 rounded-lg transition-colors shadow-sm shadow-primary/20'
-    : 'flex-1 bg-primary hover:bg-primary-light text-white text-[11px] font-bold py-2 px-2 rounded-lg transition-colors text-center shadow-sm'
-
-  const secondaryButtonClasses = isLarge
-    ? 'bg-white/90 hover:bg-white text-slate-700 border border-slate-200 text-xs font-bold py-2.5 px-4 rounded-lg transition-colors flex items-center gap-2 shadow-sm'
-    : 'flex-1 bg-white/90 hover:bg-white text-slate-700 border border-slate-200 text-[11px] font-bold py-2 px-2 rounded-lg transition-colors flex items-center justify-center gap-1 shadow-sm'
-
-  const iconSize = isLarge ? 16 : 14
-
-  return (
-    <>
-      <button className={buttonClasses}>
-        Read Magazine
-      </button>
-      <button className={secondaryButtonClasses}>
-        <Icon name="play_circle" size={iconSize} className="text-slate-700" /> Watch Video
-      </button>
-    </>
-  )
-}
-
 // ============================================================================
-// CARD COMPONENTS
+// CARD COMPONENT
 // ============================================================================
 
 /**
- * Featured Card Component (2x2 grid, top-left)
+ * Unified Card Component matching HTML design
  */
-function FeaturedCard({ card, onClick }: { card: Determinant; onClick: () => void }) {
+function Card({ card, onClick }: { card: Determinant; onClick: () => void }) {
   return (
-    <div
-      className="reveal-card glass-panel rounded-2xl p-6 lg:col-span-2 lg:row-span-2 flex flex-col justify-between relative overflow-hidden transition-all duration-500 ease-in-out group min-h-[360px] cursor-pointer"
+    <div 
+      className="card-container reveal-card relative overflow-hidden rounded-[1rem] bg-white premium-shadow aspect-[3.8/5.2] group cursor-pointer"
       onClick={onClick}
     >
       {/* Background Image */}
-      <div className="absolute inset-0 z-0 bg-white">
-        <Image
-          src={card.image}
-          alt={card.name}
-          fill
-          className="object-cover opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out"
-        />
-        <div className={`absolute inset-0 bg-gradient-to-t ${card.id === 'sleep' ? 'from-black/40 via-black/25' : 'from-black/40 via-black/25'} to-transparent`}></div>
-      </div>
-
-      {/* Header: Icon & Badge */}
-      <div className="relative z-10 flex justify-between items-start">
-        <div className="bg-white/80 backdrop-blur-md p-2 rounded-lg text-primary shadow-sm border border-white/50">
-          {renderIcon(card, 28, 'text-primary')}
-        </div>
-        {renderBadge(card, true)}
-      </div>
-
-      {/* Content: Title, Description, Progress, Buttons */}
-      <div className="relative z-10 mt-auto">
-        <h3 className="text-2xl font-bold text-white mb-2">{card.name}</h3>
-        <p className="text-white text-base mb-4 leading-relaxed max-w-[90%] font-medium">
-          {card.description}
-        </p>
-        {card.progress && (
-          <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-6">
-            <div className="h-full w-[75%] bg-gradient-to-r from-primary to-blue-400 rounded-full"></div>
-          </div>
-        )}
-        <div className="flex flex-wrap gap-3">
-          {renderButtons(true)}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Small Card Component (standard size)
- */
-function SmallCard({ card, onClick }: { card: Determinant; onClick: () => void }) {
-  const iconColor = card.id === 'hydration' ? 'text-blue-500' : 'text-slate-500'
-
-  return (
-    <div
-      className="reveal-card glass-panel rounded-2xl p-5 flex flex-col justify-between transition-all duration-500 ease-in-out group relative overflow-hidden cursor-pointer"
-      onClick={onClick}
-    >
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0 bg-white">
-        <Image
-          src={card.image}
-          alt={card.name}
-          fill
-          className="object-cover opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out"
-        />
-        <div className={`absolute inset-0 bg-gradient-to-t ${card.id === 'sleep' ? 'from-black/40 via-black/25' : 'from-black/40 via-black/25'} to-transparent`}></div>
-      </div>
-
-      {/* Header: Icon & Badge */}
-      <div className="relative z-10 flex flex-col h-full justify-between">
-        <div className="flex justify-between items-start mb-4">
-          <div className="bg-slate-50/90 backdrop-blur-sm p-2 rounded-lg text-slate-500 border border-slate-100">
-            {renderIcon(card, 24, iconColor)}
-          </div>
-          {renderBadge(card)}
-        </div>
-
-        {/* Content: Title, Description, Progress, Buttons */}
-        <div className="flex flex-col flex-grow justify-end">
-          <h3 className="text-lg font-bold text-white">{card.name}</h3>
-          <p className="text-white text-sm mt-1 mb-4 leading-relaxed font-medium">
-            {card.description}
-          </p>
-          <div className="flex gap-2">
-            {renderButtons(false)}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Full-Width Card Component (spans 2 columns)
- */
-function FullWidthCard({ card, onClick }: { card: Determinant; onClick: () => void }) {
-  return (
-    <div
-      className="reveal-card glass-panel rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between transition-all duration-500 ease-in-out group relative overflow-hidden min-h-[220px] cursor-pointer"
-      onClick={onClick}
-    >
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0 bg-white">
-        <Image
-          src={card.image}
-          alt={card.name}
-          fill
-          className="object-cover opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out"
-        />
-        <div className={`absolute inset-0 bg-gradient-to-t ${card.id === 'sleep' ? 'from-black/40 via-black/25' : 'from-black/40 via-black/25'} to-transparent`}></div>
-      </div>
-
-      {/* Header: Icon */}
-      <div className="relative z-10 flex flex-col h-full justify-between">
-        <div className="flex justify-between items-start mb-4">
-          <div className="bg-slate-50/90 backdrop-blur-sm p-2 rounded-lg text-slate-500 border border-slate-100">
-            {renderIcon(card, 24)}
-          </div>
-        </div>
-
-        {/* Content: Title, Description, Buttons */}
-        <div className="flex flex-col flex-grow justify-end max-w-[85%]">
-          <h3 className="text-2xl font-bold text-white leading-tight">{card.name}</h3>
-          <p className="text-white text-base mt-2 mb-6 leading-relaxed font-medium">
-            {card.description}
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {renderButtons(true)}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/**
- * Expandable Card Component (can span 1 or 2 columns based on context)
- */
-function ExpandableCard({ 
-  card, 
-  shouldSpan2, 
-  onClick 
-}: { 
-  card: Determinant; 
-  shouldSpan2: boolean; 
-  onClick: () => void 
-}) {
-  const isSleep = card.id === 'sleep'
-  const descriptionClasses = isSleep 
-    ? 'text-white text-sm mt-1 mb-4 leading-relaxed font-medium'
-    : shouldSpan2 
-      ? 'text-white text-base mt-2 mb-6 leading-relaxed font-medium'
-      : 'text-white text-sm mt-1 mb-4 leading-relaxed font-medium'
-
-  return (
-    <div
-      className={`reveal-card glass-panel rounded-2xl ${shouldSpan2 ? 'p-6 lg:col-span-2 min-h-[220px]' : 'p-5'} flex flex-col justify-between transition-all duration-500 ease-in-out group relative overflow-hidden cursor-pointer`}
-      onClick={onClick}
-    >
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0 bg-white">
-        <Image
-          src={card.image}
-          alt={card.name}
-          fill
-          className="object-cover opacity-100 group-hover:scale-105 transition-transform duration-700 ease-out"
-        />
-        <div className={`absolute inset-0 bg-gradient-to-t ${card.id === 'sleep' ? 'from-black/40 via-black/25' : 'from-black/40 via-black/25'} to-transparent`}></div>
-      </div>
-
-      {/* Header: Icon & Badge */}
-      <div className="relative z-10 flex flex-col h-full justify-between">
-        <div className="flex justify-between items-start mb-4">
-          <div className={`bg-slate-50/90 backdrop-blur-sm p-2 rounded-lg ${card.id === 'hydration' ? 'text-blue-500' : 'text-slate-500'} border border-slate-100`}>
-            {renderIcon(card, 24, card.id === 'hydration' ? 'text-blue-500' : 'text-slate-500')}
-          </div>
-          {renderBadge(card)}
-        </div>
-
-        {/* Content: Title, Description, Progress, Buttons */}
-        <div className={`flex flex-col flex-grow justify-end ${shouldSpan2 ? 'max-w-[85%]' : ''}`}>
-          <h3 className={shouldSpan2 ? 'text-2xl font-bold text-white leading-tight' : 'text-lg font-bold text-white'}>
-            {card.name}
-          </h3>
-          <p className={descriptionClasses}>
-            {card.description}
-          </p>
-          {card.progress && (
-            <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden mb-4">
-              <div className="h-full w-[75%] bg-gradient-to-r from-primary to-blue-400 rounded-full"></div>
+      <Image
+        alt={card.name}
+        src={card.image}
+        fill
+        className="card-image absolute inset-0 w-full h-full object-cover z-0 rounded-[1rem]"
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+      />
+      
+      {/* Glass Overlay */}
+      <div 
+        className="absolute inset-x-0 bottom-0 p-5 flex flex-col h-[62%] justify-between z-10"
+        style={{
+          background: 'rgba(255, 255, 255, 0.75)',
+          backdropFilter: 'blur(12px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(12px) saturate(160%)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.3)',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderBottomLeftRadius: '1rem',
+          borderBottomRightRadius: '1rem',
+          overflow: 'hidden'
+        }}
+      >
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <div className="bg-white/90 backdrop-blur-sm p-2 rounded-lg border border-slate-100">
+              {renderIcon(card, 24, 'text-[#256096]')}
             </div>
-          )}
-          <div className={shouldSpan2 ? 'flex flex-wrap gap-3' : 'flex gap-2'}>
-            {renderButtons(shouldSpan2)}
+            <h3 className="text-xl font-extrabold text-[#256096] leading-tight">{card.name}</h3>
           </div>
+          <p className="text-[#333333]/80 text-[13px] leading-snug font-medium">{card.description}</p>
+        </div>
+        <div className="flex flex-row gap-2 pt-4 border-t border-[#2894D9]/10 mt-auto justify-center items-center mx-auto max-w-[90%]">
+          <button 
+            className="btn-action btn-read-magazine" 
+            onClick={(e) => {
+              e.stopPropagation()
+              onClick()
+            }}
+          >
+            <Icon name="library_books" size={16} className="text-white" />
+            <span className="text-[10px] tracking-wide whitespace-nowrap">Read Magazine</span>
+          </button>
+          <button className="btn-action btn-watch-video">
+            <Icon name="play_circle" size={16} className="text-[#333333]" />
+            <span className="text-[10px] tracking-wide whitespace-nowrap">Watch Video</span>
+          </button>
         </div>
       </div>
     </div>
@@ -442,18 +203,20 @@ function ExpandableCard({
 // ============================================================================
 
 export default function Determinants() {
-  const [selectedId, setSelectedId] = useState<string | null>('inhaler')
-  const [isTransitioning, setIsTransitioning] = useState(false)
-  const organized = organizeCards(selectedId)
-  
-  const handleCardClick = (cardId: string) => {
-    if (cardId === selectedId) return
-    setIsTransitioning(true)
-    setTimeout(() => {
-      setSelectedId(cardId)
-      setTimeout(() => setIsTransitioning(false), 50)
-    }, 50)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null)
+  const [selectedCardName, setSelectedCardName] = useState('')
+  const [selectedCardIconSrc, setSelectedCardIconSrc] = useState<string | null>(null)
+  const [selectedCardIconName, setSelectedCardIconName] = useState<string>('')
+
+  const handleCardClick = (card: Determinant) => {
+    setSelectedCardId(card.id)
+    setSelectedCardName(card.name)
+    setSelectedCardIconSrc(iconSrcMap[card.id] || null)
+    setSelectedCardIconName(card.icon || '')
+    setIsModalOpen(true)
   }
+
   useEffect(() => {
     const cards = Array.from(document.querySelectorAll<HTMLElement>('.reveal-card'))
     const observer = new IntersectionObserver(
@@ -501,65 +264,107 @@ export default function Determinants() {
       </div>
 
       {/* Cards Grid */}
-      <div className="px-4 md:px-10 lg:px-20 flex flex-1 justify-center pb-20">
-        <div className="w-full max-w-[1280px]">
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[minmax(180px,auto)] ${isTransitioning ? 'transition-all duration-500 ease-in-out' : ''}`}>
-            
-            {/* Featured Card (2x2) */}
-              <FeaturedCard 
-                card={organized.featured} 
-                onClick={() => handleCardClick(organized.featured.id)} 
-              />
-
-            {/* Row 1: Medications, Supplements (Small Cards) */}
-            {organized.row1.map((card) => (
-                <SmallCard 
-                key={card.id} 
-                  card={card} 
-                  onClick={() => handleCardClick(card.id)} 
-                />
-            ))}
-
-            {/* Row 1: Food (Full-Width Card) */}
-            {organized.food && (
-                <FullWidthCard 
-                  card={organized.food} 
-                  onClick={() => handleCardClick(organized.food!.id)} 
-                />
-            )}
-
-            {/* Row 2: Weather, Environmental, Hydration */}
-            {organized.row2.map((card) => {
-              const shouldSpan2 = (card.id === 'weather' && organized.weatherSpans2) || 
-                                  (card.id === 'environmental' && !organized.weatherSpans2)
-              return (
-                  <ExpandableCard
-                  key={card.id}
-                    card={card}
-                    shouldSpan2={shouldSpan2}
-                    onClick={() => handleCardClick(card.id)}
-                  />
-              )
+      <div className="px-6 md:px-12 lg:px-20 pb-32">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="compact-grid">
+            {CARD_ORDER.map(id => {
+              const card = determinants.find(d => d.id === id)
+              return card ? <Card key={card.id} card={card} onClick={() => handleCardClick(card)} /> : null
             })}
-
-            {/* Row 3: Activity, Sleep, Stress */}
-            {organized.row3.map((card) => {
-              const shouldSpan2 = (card.id === 'sleep' && organized.sleepSpans2) || 
-                                  (card.id === 'stress' && !organized.sleepSpans2)
-              return (
-                  <ExpandableCard
-                  key={card.id}
-                    card={card}
-                    shouldSpan2={shouldSpan2}
-                    onClick={() => handleCardClick(card.id)}
-                  />
-              )
-            })}
-
           </div>
         </div>
       </div>
-      <style jsx>{`
+
+      {/* Determinant Modal */}
+      <DeterminantModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        cardId={selectedCardId}
+        cardName={selectedCardName}
+        iconSrc={selectedCardIconSrc}
+        iconName={selectedCardIconName || undefined}
+      />
+      
+      <style jsx global>{`
+        .glass-overlay {
+          background: rgba(255, 255, 255, 0.75) !important;
+          backdrop-filter: blur(12px) saturate(160%) !important;
+          -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+          border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        .premium-shadow {
+          box-shadow: 0 4px 12px -2px rgba(40, 148, 217, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+        .card-container {
+          transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          outline: none;
+        }
+        .card-container:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 20px 40px -12px rgba(40, 148, 217, 0.12), 0 10px 20px -10px rgba(0, 0, 0, 0.04);
+          border-color: rgba(40, 148, 217, 0.2);
+        }
+        .card-image {
+          transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .card-container:hover .card-image {
+          transform: scale(1.05);
+        }
+        .compact-grid {
+          display: grid;
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+          gap: 1.5rem;
+        }
+        @media (min-width: 640px) {
+          .compact-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+        @media (min-width: 1024px) {
+          .compact-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+          }
+        }
+        .btn-action {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.375rem 0.75rem;
+          border-radius: 1rem;
+          font-weight: 700;
+          font-size: 10px;
+          transition: all 0.3s;
+          text-decoration: none;
+          flex: 1;
+          white-space: nowrap;
+          border: none;
+          cursor: pointer;
+          font-family: inherit;
+        }
+        .btn-read-magazine {
+          color: white;
+          background-color: #2894D9;
+        }
+        .btn-read-magazine:hover {
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          transform: scale(1.02);
+          background-color: #217cb8;
+        }
+        .btn-watch-video {
+          color: #333333;
+          background-color: #F8F5EE;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .btn-watch-video:hover {
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+          transform: scale(1.02);
+          background-color: #ffffff;
+        }
+        .btn-action .material-symbols-outlined {
+          font-size: 18px;
+        }
         .reveal-card {
           opacity: 0;
           transform: translateY(10px);
