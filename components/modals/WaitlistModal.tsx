@@ -136,7 +136,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
                       <p className="font-bold">What happens next:</p>
                       <ul className="space-y-2 text-sm text-left">
                         <li>📩 A confirmation email is on its way</li>
-                        <li>🔔 You'll receive priority updates</li>
+                        <li>🔔 You&apos;ll receive priority updates</li>
                       </ul>
                     </div>
                   </motion.div>
@@ -161,7 +161,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
                       {errors.email && (
                         <p className="mt-1 text-sm text-red-600">{errors.email}</p>
                       )}
-                      <p className="text-sm text-gray-600">We'll notify you when early access opens.</p>
+                      <p className="text-sm text-gray-600">We&apos;ll notify you when early access opens.</p>
                     </div>
                     
                     {errors.submit && (
