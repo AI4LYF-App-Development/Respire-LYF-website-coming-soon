@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Copy, Mail } from 'lucide-react'
+import { trackModalInteraction, trackFormSubmission } from '@/lib/analytics'
 
 interface ContactModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-const COMPANY_EMAIL = 'contact@respirelyf.com' // Update with your actual email
+const COMPANY_EMAIL = 'contact@aiforlife.ai' // Update with your actual email
 
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [formData, setFormData] = useState({
@@ -21,6 +22,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [emailCopied, setEmailCopied] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      trackModalInteraction('ContactModal', 'open')
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) {
@@ -67,12 +74,10 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     setErrors({})
     
     const apiUrl = '/api/waitlist'
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
     const requestBody = {
       email: formData.email,
       source: 'WEBSITE',
-      timezone: userTimezone,
-      message: formData.message // Include message but won't be sent to API yet
+      message: formData.message.trim().length > 0 ? formData.message.trim().substring(0, 1000) : undefined
     }
     
     console.log('🚀 [ContactModal] API Call Started:', {
@@ -92,8 +97,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         body: JSON.stringify({
           email: formData.email,
           source: 'WEBSITE',
-          timezone: userTimezone
-          // Note: message is not sent to API yet as it's not live
+          message: formData.message.trim().length > 0 ? formData.message.trim().substring(0, 1000) : undefined
         }),
       })
       
@@ -128,11 +132,12 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
       if (response.status === 200 || response.status === 201) {
         console.log('✅ [ContactModal] Success:', {
           status: response.status,
-          message: data.detail || 'Email submitted successfully',
+          responseMessage: data.detail || 'Email submitted successfully',
           email: formData.email,
-          userMessage: formData.message, // Log message locally (not sent to API yet)
+          userMessage: formData.message,
           timestamp: new Date().toISOString()
         })
+        trackFormSubmission('contact', true)
         setIsSubmitted(true)
         setFormData({ email: '', message: '' })
       } else {
@@ -148,6 +153,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           errorMessage = data.message
         }
         
+        trackFormSubmission('contact', false, errorMessage)
         console.error('❌ [ContactModal] API Error:', {
           status: response.status,
           statusText: response.statusText,

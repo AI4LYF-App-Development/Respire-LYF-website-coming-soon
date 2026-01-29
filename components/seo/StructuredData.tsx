@@ -7,13 +7,13 @@ export default function StructuredData() {
     name: 'Respire LYF',
     url: siteUrl,
     logo: `${siteUrl}/icons/respirelyf_logo.png`,
-    description: 'All-in-One Respiratory Co-Pilot - Transform scattered symptoms into clear patterns. Track everything free, understand everything premium.',
+    description: 'Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.',
     contactPoint: {
       '@type': 'ContactPoint',
-      email: 'contact@respirelyf.com',
+      email: 'contact@aiforlife.ai',
       contactType: 'Customer Service',
       areaServed: 'US',
-      availableLanguage: 'en',
+      availableLanguage: 'en-US',
     },
     sameAs: [
       'https://x.com/RespireLYF',
@@ -30,7 +30,7 @@ export default function StructuredData() {
     '@type': 'WebSite',
     name: 'Respire LYF',
     url: siteUrl,
-    description: 'Transform scattered symptoms into clear patterns. Discover your personal respiratory fingerprint with the world\'s first MD-RIC platform. Track everything free, understand everything premium.',
+    description: 'Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.',
     publisher: {
       '@type': 'Organization',
       name: 'Respire LYF',
@@ -39,14 +39,7 @@ export default function StructuredData() {
         url: `${siteUrl}/icons/respirelyf_logo.png`,
       },
     },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/search?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
+    // SearchAction removed - no search functionality exists on site
     inLanguage: 'en-US',
   }
 
@@ -56,7 +49,7 @@ export default function StructuredData() {
     name: 'Respire LYF',
     applicationCategory: 'HealthApplication',
     operatingSystem: 'Web',
-    description: 'All-in-One Respiratory Co-Pilot for asthma and COPD management. Track everything free, understand everything premium.',
+    description: 'Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.',
     offers: {
       '@type': 'Offer',
       price: '0',
@@ -90,6 +83,34 @@ export default function StructuredData() {
     },
   }
 
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+    ],
+  }
+
+  const healthTopicSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'HealthTopic',
+    name: 'Respiratory Health Management',
+    description: 'Comprehensive respiratory health tracking and analysis for asthma and COPD management',
+    audience: {
+      '@type': 'Audience',
+      audienceType: 'Patients with respiratory conditions',
+    },
+    specialty: {
+      '@type': 'MedicalSpecialty',
+      name: 'Pulmonology',
+    },
+  }
+
   return (
     <>
       <script
@@ -107,6 +128,14 @@ export default function StructuredData() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(medicalEntitySchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(healthTopicSchema) }}
       />
     </>
   )

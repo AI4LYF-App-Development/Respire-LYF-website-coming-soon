@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/layout/PageHeader'
+import PageBreadcrumbs from '@/components/seo/PageBreadcrumbs'
 
 import { generatePageMetadata } from '@/lib/seo'
 
@@ -12,7 +13,12 @@ export const metadata: Metadata = generatePageMetadata(
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen relative" style={{ background: 'radial-gradient(circle at center, rgba(80, 167, 226, 0.08) 0%, rgba(255, 255, 255, 1) 75%)' }}>
+    <>
+      <PageBreadcrumbs items={[
+        { name: 'Home', url: '/' },
+        { name: 'Privacy Policy', url: '/privacy-policy' },
+      ]} />
+      <div className="min-h-screen relative" style={{ background: 'radial-gradient(circle at center, rgba(80, 167, 226, 0.08) 0%, rgba(255, 255, 255, 1) 75%)' }}>
       {/* Background Radial Gradients */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-28">
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(59,130,246,0.14), transparent 50%)' }}></div>
@@ -151,7 +157,7 @@ export default function PrivacyPolicy() {
                   <li><strong>Data Portability:</strong> You can request a copy of your data in a portable format</li>
                 </ul>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  To exercise these rights, please contact us at <a href="mailto:contact@respirelyf.com" className="text-[#2894D9] hover:text-[#217cb8] font-semibold underline">contact@respirelyf.com</a>.
+                  To exercise these rights, please contact us at <a href="mailto:contact@aiforlife.ai" className="text-[#2894D9] hover:text-[#217cb8] font-semibold underline">contact@aiforlife.ai</a>.
                 </p>
               </div>
             </section>
@@ -213,8 +219,8 @@ export default function PrivacyPolicy() {
                 <div className="bg-gradient-to-r from-[#2894D9]/10 to-[#256096]/10 border-l-4 border-[#2894D9] p-6 rounded-r-lg">
                   <p className="text-lg text-gray-800">
                     <strong className="text-gray-900">Email:</strong>{' '}
-                    <a href="mailto:contact@respirelyf.com" className="text-[#2894D9] hover:text-[#217cb8] font-semibold underline">
-                      contact@respirelyf.com
+                    <a href="mailto:contact@aiforlife.ai" className="text-[#2894D9] hover:text-[#217cb8] font-semibold underline">
+                    contact@aiforlife.ai
                     </a>
                   </p>
                 </div>
@@ -235,5 +241,6 @@ export default function PrivacyPolicy() {
         </div>
       </div>
     </div>
+    </>
   )
 }

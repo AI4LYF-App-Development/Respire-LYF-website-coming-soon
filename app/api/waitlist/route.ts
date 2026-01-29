@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
-    const { email, source, timezone } = body
+    const { email, source, message, timezone } = body
     
     if (!email || typeof email !== 'string') {
       return NextResponse.json(
@@ -23,13 +23,39 @@ export async function POST(request: NextRequest) {
       )
     }
     
+    // Validate message if provided (max 1000 characters)
+    if (message !== undefined && message !== null) {
+      if (typeof message !== 'string') {
+        return NextResponse.json(
+          { detail: 'Message must be a string' },
+          { status: 400 }
+        )
+      }
+      if (message.length > 1000) {
+        return NextResponse.json(
+          { detail: 'Message must be 1000 characters or less' },
+          { status: 400 }
+        )
+      }
+    }
+    
     // Get user timezone from request body, headers, or use default
     const userTimezone = timezone || 
                         request.headers.get('x-user-timezone') || 
                         request.headers.get('timezone') || 
                         'UTC'
     
-    console.log('🚀 [API Proxy] Forwarding waitlist request:', { email, source, userTimezone })
+    // Build request body - only include message if provided
+    const requestBody: { email: string; source: string; message?: string } = {
+      email,
+      source
+    }
+    
+    if (message && message.trim().length > 0) {
+      requestBody.message = message.trim().substring(0, 1000)
+    }
+    
+    console.log('🚀 [API Proxy] Forwarding waitlist request:', { email, source, message: message ? 'provided' : 'not provided', userTimezone })
     
     // Proxy the request to the actual API with required headers
     const response = await fetch(API_BASE_URL, {
@@ -42,10 +68,7 @@ export async function POST(request: NextRequest) {
         'X-App-Version': '1.0.0',
         'X-User-Timezone': userTimezone,
       },
-      body: JSON.stringify({
-        email,
-        source
-      }),
+      body: JSON.stringify(requestBody),
     })
     
     const data = await response.json()

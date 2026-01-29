@@ -5,6 +5,8 @@ import WhatIfQuestionsSlider from '@/components/sections/WhatIfQuestionsSlider'
 import Determinants from '@/components/sections/Determinants'
 import WaitlistModal from '@/components/modals/WaitlistModal'
 import GlobalCardReveal from '@/components/animations/GlobalCardReveal'
+import SEOContent from '@/components/seo/SEOContent'
+import { trackButtonClick } from '@/lib/analytics'
 
 export default function HomePage() {
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false)
@@ -28,8 +30,10 @@ export default function HomePage() {
   
   return (
     <main className="min-h-screen">
+      <SEOContent />
       <GlobalCardReveal />
       <WhatIfQuestionsSlider onJoinWaitlist={() => {
+        trackButtonClick('Join Waitlist', 'hero_section')
         setForceSubmitted(false)
         setWaitlistEmail(undefined)
         setIsWaitlistOpen(true)

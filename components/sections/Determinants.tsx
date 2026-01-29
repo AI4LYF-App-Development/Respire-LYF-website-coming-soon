@@ -6,6 +6,7 @@ import Icon from '@/components/ui/Icon'
 import DeterminantModal from '@/components/modals/DeterminantModal'
 import VideoModal from '@/components/modals/VideoModal'
 import { getABVariant } from '@/lib/abTesting'
+import { trackCardInteraction, trackButtonClick, trackVideoInteraction } from '@/lib/analytics'
 
 // ============================================================================
 // DATA & CONSTANTS
@@ -161,58 +162,88 @@ function renderIcon(card: Determinant, size: number = 24, className: string = 't
 function Card({ card, onClick, onWatchVideo }: { card: Determinant; onClick: () => void; onWatchVideo: () => void }) {
   return (
     <div 
-      className="card-container reveal-card relative overflow-hidden rounded-[0.875rem] sm:rounded-[1rem] bg-white premium-shadow aspect-[3.8/5.2] group cursor-pointer"
+      className="card-container reveal-card relative overflow-visible rounded-[0.875rem] sm:rounded-[1rem] bg-white premium-shadow group cursor-pointer w-full"
       onClick={onClick}
-      style={{ isolation: 'isolate' }}
+      style={{ 
+        isolation: 'isolate'
+      }}
     >
-      {/* Background Image */}
-      <Image
-        alt={card.name}
-        src={card.image}
-        fill
-        className="card-image absolute inset-0 w-full h-full z-0"
+      {/* Background Image - Extends to cover border and slightly into overlay */}
+      <div 
+        className="absolute z-0 overflow-hidden card-image-container"
         style={{
-          objectFit: 'cover',
-          objectPosition: 'center top',
-          borderRadius: 'inherit'
+          top: '-2.5px',
+          left: '-2.5px',
+          right: '-2.5px',
+          bottom: 'calc(58% - 2px)',
+          borderTopLeftRadius: '0.875rem',
+          borderTopRightRadius: '0.875rem',
+          clipPath: 'inset(0 0 0 0 round 0.875rem 0.875rem 0 0)',
         }}
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-      />
+      >
+        <Image
+          alt={card.name}
+          src={card.image}
+          fill
+          className="card-image"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center top',
+          }}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+        />
+      </div>
       
       {/* Glass Overlay */}
       <div 
-        className="absolute bottom-0 p-3 sm:p-4 md:p-5 flex flex-col h-[62%] justify-between z-10 glass-overlay-bottom"
+        className="absolute bottom-0 left-0 right-0 p-2 sm:p-2.5 md:p-3 flex flex-col z-10 glass-overlay-bottom"
         style={{
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.75) 100%)',
+          background: 'linear-gradient(135deg, rgba(240, 248, 255, 0.75) 0%, rgba(230, 242, 255, 0.65) 100%)',
           backdropFilter: 'blur(20px) saturate(180%)',
           WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.5)',
-          boxShadow: '0 -8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(255, 255, 255, 0.6)',
-          overflow: 'hidden'
+          borderTop: '1px solid rgba(40, 148, 217, 0.2)',
+          boxShadow: '0 -8px 32px 0 rgba(0, 0, 0, 0.1), inset 0 1px 0 0 rgba(40, 148, 217, 0.15)',
+          overflow: 'hidden',
+          height: 'calc(58% + 2px)',
+          minHeight: 'calc(58% + 2px)',
+          maxHeight: 'calc(58% + 2px)',
+          top: 'calc(42% - 2px)'
         }}
       >
+        {/* Light blue glass tint overlay */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-0"
+          style={{
+            background: 'linear-gradient(135deg, rgba(40, 148, 217, 0.08) 0%, rgba(37, 96, 150, 0.05) 100%)',
+            borderRadius: 'inherit',
+          }}
+        />
         {/* Glass shine effect overlay */}
         <div 
           className="absolute inset-0 pointer-events-none z-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 60%)',
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, transparent 60%)',
             borderRadius: 'inherit',
           }}
         />
-        <div className="relative z-10">
-          <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
-            <div className="bg-white/90 backdrop-blur-sm p-1.5 sm:p-2 rounded-lg border border-slate-100 shrink-0 flex items-center justify-center">
-              {renderIcon(card, 20, 'text-[#256096]')}
+        <div className="relative z-10 flex-1 flex flex-col min-h-0 justify-between">
+          <div className="flex-shrink-0 flex flex-col">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-1.5">
+              <div className="bg-[rgba(240,248,255,0.85)] backdrop-blur-sm p-1.5 sm:p-2 rounded-lg border border-[rgba(40,148,217,0.15)] shrink-0 flex items-center justify-center">
+                {renderIcon(card, 20, 'text-[#256096]')}
+              </div>
+              <h3 className="text-base sm:text-lg md:text-xl font-extrabold text-[#256096] leading-tight">{card.name}</h3>
             </div>
-            <h3 className="text-base sm:text-lg md:text-xl font-extrabold text-[#256096] leading-tight">{card.name}</h3>
+            <div className="h-[4.5rem] sm:h-[5rem] md:h-[5.5rem] overflow-hidden">
+              <p className="text-[#333333]/80 text-[11px] sm:text-[12px] md:text-[13px] leading-snug font-medium">{card.description}</p>
+            </div>
           </div>
-          <p className="text-[#333333]/80 text-[11px] sm:text-[12px] md:text-[13px] leading-snug font-medium">{card.description}</p>
-        </div>
-        <div className="relative z-10 flex flex-row gap-1.5 sm:gap-2 pt-3 sm:pt-4 border-t border-[#2894D9]/10 mt-auto justify-center items-center mx-auto max-w-[90%]">
+          <div className="flex flex-row gap-1.5 sm:gap-2 pt-2 sm:pt-3 pb-1 sm:pb-1.5 border-t border-[#2894D9]/10 flex-shrink-0 justify-center items-center w-full mt-auto">
           <button 
             className="btn-action btn-read-magazine" 
             onClick={(e) => {
               e.stopPropagation()
+              trackButtonClick('Read Magazine', 'determinants_card', { card_name: card.name, card_id: card.id })
               onClick()
             }}
           >
@@ -223,12 +254,14 @@ function Card({ card, onClick, onWatchVideo }: { card: Determinant; onClick: () 
             className="btn-action btn-watch-video"
             onClick={(e) => {
               e.stopPropagation()
+              trackButtonClick('Watch Video', 'determinants_card', { card_name: card.name, card_id: card.id })
               onWatchVideo()
             }}
           >
             <Icon name="play_circle" size={14} className="text-[#333333] shrink-0" />
             <span className="text-[9px] sm:text-[10px] tracking-wide whitespace-nowrap">Watch Video</span>
           </button>
+        </div>
         </div>
       </div>
     </div>
@@ -258,6 +291,7 @@ export default function Determinants() {
   }, [])
 
   const handleCardClick = (card: Determinant) => {
+    trackCardInteraction(card.id, card.name, 'read_magazine')
     setSelectedCardId(card.id)
     setSelectedCardName(card.name)
     setSelectedCardIconSrc(iconSrcMap[card.id] || null)
@@ -268,6 +302,8 @@ export default function Determinants() {
   const handleWatchVideo = (card: Determinant) => {
     const videoUrl = videoUrlMap[card.id]
     if (videoUrl) {
+      trackCardInteraction(card.id, card.name, 'watch_video')
+      trackVideoInteraction(card.name, videoUrl, 'play')
       setSelectedCardName(card.name)
       setSelectedCardIconSrc(iconSrcMap[card.id] || null)
       setSelectedCardIconName(card.icon || '')
@@ -325,8 +361,8 @@ export default function Determinants() {
 
       {/* Cards Grid */}
       <div className="relative z-10 px-3 sm:px-6 md:px-8 lg:px-12 xl:px-20 pb-12 sm:pb-24 md:pb-32">
-        <div className="max-w-[1440px] mx-auto">
-          <div className="compact-grid">
+        <div className="max-w-[1440px] mx-auto w-full">
+          <div className="compact-grid w-full">
             {CARD_ORDER.map(id => {
               const card = determinants.find(d => d.id === id)
               return card ? (
@@ -375,21 +411,29 @@ export default function Determinants() {
         }
         .card-container {
           transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-          border: 1px solid rgba(0, 0, 0, 0.08);
+          border: 2.5px solid rgba(40, 148, 217, 0.35);
           border-bottom: none;
           outline: none;
           isolation: isolate;
+          width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          position: relative;
+          aspect-ratio: 3.8 / 5.8;
+          box-shadow: 0 0 0 0.5px rgba(40, 148, 217, 0.15);
+          background: white;
+          overflow: visible;
         }
         .glass-overlay-bottom {
           border-bottom-left-radius: 0.875rem;
           border-bottom-right-radius: 0.875rem;
-          border-bottom: 2px solid rgba(255, 255, 255, 0.95);
-          border-left: 2px solid rgba(255, 255, 255, 0.95);
-          border-right: 2px solid rgba(255, 255, 255, 0.95);
-          margin-left: -2px;
-          margin-right: -2px;
-          margin-bottom: -2px;
-          width: calc(100% + 4px);
+          border-bottom: 2.5px solid rgba(40, 148, 217, 0.35);
+          border-left: 2.5px solid rgba(40, 148, 217, 0.35);
+          border-right: 2.5px solid rgba(40, 148, 217, 0.35);
+          margin-left: -2.5px;
+          margin-right: -2.5px;
+          margin-bottom: -2.5px;
+          width: calc(100% + 5px);
           left: 0;
           right: 0;
           box-sizing: border-box;
@@ -399,29 +443,53 @@ export default function Determinants() {
             border-bottom-left-radius: 1rem;
             border-bottom-right-radius: 1rem;
           }
+          .card-image-container {
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            clip-path: inset(0 0 0 0 round 1rem 1rem 0 0);
+          }
+        }
+        .card-image-container {
+          border-top-left-radius: 0.875rem;
+          border-top-right-radius: 0.875rem;
         }
         .card-image {
           object-fit: cover;
           object-position: center top;
+          width: 100%;
+          height: 100%;
         }
         .compact-grid {
           display: grid;
-          grid-template-columns: repeat(1, minmax(0, 1fr));
+          grid-template-columns: repeat(1, 1fr);
           gap: 1rem;
           padding: 0;
+          width: 100%;
+          align-items: start;
         }
-        @media (min-width: 640px) {
+        .compact-grid > * {
+          min-width: 0;
+          width: 100%;
+        }
+        @media (min-width: 480px) {
           .compact-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.25rem;
+            gap: 1rem;
           }
         }
         @media (min-width: 768px) {
           .compact-grid {
-            gap: 1.5rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.25rem;
           }
         }
         @media (min-width: 1024px) {
+          .compact-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.5rem;
+          }
+        }
+        @media (min-width: 1280px) {
           .compact-grid {
             grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 1.5rem;
@@ -438,7 +506,6 @@ export default function Determinants() {
           font-size: 10px;
           transition: all 0.3s;
           text-decoration: none;
-          flex: 1;
           white-space: nowrap;
           cursor: pointer;
           font-family: inherit;
@@ -480,6 +547,13 @@ export default function Determinants() {
         }
         .btn-action .material-symbols-outlined {
           font-size: 18px;
+        }
+        .line-clamp-3 {
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .reveal-card {
           opacity: 0;

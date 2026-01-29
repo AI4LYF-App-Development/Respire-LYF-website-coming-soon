@@ -5,6 +5,7 @@ import { X } from 'lucide-react'
 import { useEffect } from 'react'
 import Icon from '@/components/ui/Icon'
 import Image from 'next/image'
+import { trackModalInteraction, trackVideoInteraction } from '@/lib/analytics'
 
 interface VideoModalProps {
   isOpen: boolean
@@ -31,6 +32,14 @@ export default function VideoModal({ isOpen, onClose, videoUrl, title, iconSrc, 
   const videoId = getYouTubeVideoId(videoUrl)
   const thumbnailUrl = videoId ? getYouTubeThumbnail(videoId) : null
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0` : null
+
+  // Track modal open/close and video play
+  useEffect(() => {
+    if (isOpen) {
+      trackModalInteraction('VideoModal', 'open')
+      trackVideoInteraction(title, videoUrl, 'play')
+    }
+  }, [isOpen, title, videoUrl])
 
   // Prevent body scroll when modal is open
   useEffect(() => {

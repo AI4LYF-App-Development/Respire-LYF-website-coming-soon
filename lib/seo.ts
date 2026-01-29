@@ -1,9 +1,11 @@
 import { Metadata } from 'next'
 
+// Ensure consistent URL (no www redirect issues)
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://respirelyf.com'
 const siteName = 'Respire LYF'
-const defaultTitle = 'Respire LYF - All-in-One Respiratory Co-Pilot'
-const defaultDescription = 'Transform scattered symptoms into clear patterns. Discover your personal respiratory fingerprint with the world\'s first MD-RIC platform. Understand how sleep, stress, food, hydration, and 10 key determinants affect your breathing. Track everything free, understand everything premium.'
+const defaultTitle = 'Respire LYF'
+const defaultDescription = 'Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.'
+const facebookAppId = process.env.NEXT_PUBLIC_FACEBOOK_APP_ID || ''
 
 export function generateMetadata(): Metadata {
   return {
@@ -55,6 +57,7 @@ export function generateMetadata(): Metadata {
     },
     icons: {
       icon: [
+        { url: '/favicon.ico', sizes: 'any' },
         { url: '/icons/respirelyf_logo.png', sizes: '32x32', type: 'image/png' },
         { url: '/icons/respirelyf_logo.png', sizes: '192x192', type: 'image/png' },
         { url: '/icons/respirelyf_logo.png', sizes: '512x512', type: 'image/png' },
@@ -62,7 +65,7 @@ export function generateMetadata(): Metadata {
       apple: [
         { url: '/icons/respirelyf_logo.png', sizes: '180x180', type: 'image/png' },
       ],
-      shortcut: '/icons/respirelyf_logo.png',
+      shortcut: '/favicon.ico',
     },
     manifest: '/manifest.json',
     appleWebApp: {
@@ -73,16 +76,17 @@ export function generateMetadata(): Metadata {
     openGraph: {
       type: 'website',
       locale: 'en_US',
-      url: siteUrl,
+      url: siteUrl, // Ensure this matches your canonical URL
       siteName: siteName,
       title: defaultTitle,
       description: defaultDescription,
       images: [
         {
-          url: '/icons/respirelyf_logo.png', // Fallback to logo if OG image doesn't exist
+          url: `${siteUrl}/icons/respirelyf_logo.png`, // Absolute URL for better SEO
           width: 1200,
           height: 630,
           alt: 'Respire LYF - Respiratory Health Intelligence Platform',
+          type: 'image/png',
         },
       ],
     },
@@ -90,7 +94,7 @@ export function generateMetadata(): Metadata {
       card: 'summary_large_image',
       title: defaultTitle,
       description: defaultDescription,
-      images: ['/icons/respirelyf_logo.png'], // Fallback to logo
+      images: [`${siteUrl}/icons/respirelyf_logo.png`], // Absolute URL for better SEO
       creator: '@RespireLYF',
       site: '@RespireLYF',
     },
@@ -107,16 +111,11 @@ export function generateMetadata(): Metadata {
     },
     alternates: {
       canonical: siteUrl,
-      languages: {
-        'en-US': siteUrl,
-        'en': siteUrl,
-      },
     },
     verification: {
-      // Add your verification codes here when available
-      // google: 'your-google-verification-code',
-      // yandex: 'your-yandex-verification-code',
-      // bing: 'your-bing-verification-code',
+      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION || undefined,
+      yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION || undefined,
+      // Bing verification is added via other.meta tag
     },
     category: 'Health Technology',
     classification: 'Health & Wellness',
@@ -127,6 +126,10 @@ export function generateMetadata(): Metadata {
       'apple-mobile-web-app-capable': 'yes',
       'apple-mobile-web-app-status-bar-style': 'default',
       'apple-mobile-web-app-title': siteName,
+      'format-detection': 'telephone=no',
+      'referrer': 'origin-when-cross-origin',
+      ...(facebookAppId && { 'fb:app_id': facebookAppId }),
+      ...(process.env.NEXT_PUBLIC_BING_VERIFICATION && { 'msvalidate.01': process.env.NEXT_PUBLIC_BING_VERIFICATION }),
     },
   }
 }
@@ -135,7 +138,8 @@ export function generatePageMetadata(
   title: string,
   description: string,
   path: string = '',
-  image?: string
+  image?: string,
+  noindex: boolean = false
 ): Metadata {
   const fullTitle = `${title} | ${siteName}`
   const fullUrl = `${siteUrl}${path}`
@@ -143,6 +147,13 @@ export function generatePageMetadata(
   return {
     title: fullTitle,
     description,
+    keywords: [
+      'respirelyf',
+      'respiratory health',
+      'asthma management',
+      'COPD tracking',
+      title.toLowerCase(),
+    ],
     openGraph: {
       type: 'website',
       locale: 'en_US',
@@ -152,14 +163,14 @@ export function generatePageMetadata(
       siteName: siteName,
       images: image ? [
         {
-          url: image,
+          url: image.startsWith('http') ? image : `${siteUrl}${image}`,
           width: 1200,
           height: 630,
           alt: title,
         }
       ] : [
         {
-          url: '/icons/respirelyf_logo.png',
+          url: `${siteUrl}/icons/respirelyf_logo.png`,
           width: 1200,
           height: 630,
           alt: title,
@@ -170,20 +181,22 @@ export function generatePageMetadata(
       card: 'summary_large_image',
       title: fullTitle,
       description,
-      images: image ? [image] : ['/icons/respirelyf_logo.png'],
+      images: image ? [image.startsWith('http') ? image : `${siteUrl}${image}`] : [`${siteUrl}/icons/respirelyf_logo.png`],
       creator: '@RespireLYF',
       site: '@RespireLYF',
     },
     alternates: {
       canonical: fullUrl,
-      languages: {
-        'en-US': fullUrl,
-        'en': fullUrl,
-      },
     },
     robots: {
-      index: true,
-      follow: true,
+      index: !noindex,
+      follow: !noindex,
+      ...(noindex && {
+        googleBot: {
+          index: false,
+          follow: false,
+        },
+      }),
     },
   }
 }

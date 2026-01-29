@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
+import { trackModalInteraction, trackFormSubmission, trackButtonClick } from '@/lib/analytics'
 
 interface WaitlistModalProps {
   isOpen: boolean
@@ -21,12 +22,20 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
+  // Track modal open/close
+  useEffect(() => {
+    if (isOpen) {
+      trackModalInteraction('WaitlistModal', 'open')
+    }
+  }, [isOpen])
+
   // When opened with a prefill email + forceSubmitted, jump straight to success
   useEffect(() => {
     if (isOpen && forceSubmitted) {
       setFormData(prev => ({ ...prev, email: prefillEmail || '' }))
       setErrors({})
       setIsSubmitted(true)
+      trackFormSubmission('waitlist', true)
     }
   }, [isOpen, forceSubmitted, prefillEmail])
   
@@ -122,6 +131,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
           email: formData.email,
           timestamp: new Date().toISOString()
         })
+        trackFormSubmission('waitlist', true)
         setIsSubmitted(true)
         setFormData({
           email: '',
@@ -145,6 +155,7 @@ export default function WaitlistModal({ isOpen, onClose, prefillEmail, forceSubm
           errorMessage = data.message
         }
         
+        trackFormSubmission('waitlist', false, errorMessage)
         console.error('❌ [WaitlistModal] API Error:', {
           status: response.status,
           statusText: response.statusText,

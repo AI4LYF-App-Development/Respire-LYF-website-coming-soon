@@ -1,18 +1,24 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/layout/PageHeader'
+import PageBreadcrumbs from '@/components/seo/PageBreadcrumbs'
 
 import { generatePageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = generatePageMetadata(
-  'Terms of Service',
-  'Terms of Service for Respire LYF - Read our terms and conditions for using our services. Includes medical disclaimer and user responsibilities.',
+  'Terms of Use',
+  'Terms of Use for Respire LYF - Read our terms and conditions for using our services. Includes medical disclaimer and user responsibilities.',
   '/terms-of-service'
 )
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen relative" style={{ background: 'radial-gradient(circle at center, rgba(80, 167, 226, 0.08) 0%, rgba(255, 255, 255, 1) 75%)' }}>
+    <>
+      <PageBreadcrumbs items={[
+        { name: 'Home', url: '/' },
+        { name: 'Terms of Use', url: '/terms-of-service' },
+      ]} />
+      <div className="min-h-screen relative" style={{ background: 'radial-gradient(circle at center, rgba(80, 167, 226, 0.08) 0%, rgba(255, 255, 255, 1) 75%)' }}>
       {/* Background Radial Gradients */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-28">
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(59,130,246,0.14), transparent 50%)' }}></div>
@@ -26,14 +32,21 @@ export default function TermsOfService() {
           {/* Hero Section */}
           <div className="text-center mb-16 sm:mb-20">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-gray-900 mb-4 tracking-tight">
-              Terms of Service
+              Terms of Use
             </h1>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200/50 shadow-sm">
               <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Last Updated</span>
               <span className="text-sm font-bold text-gray-700">
-                {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                January 24, 2026
               </span>
             </div>
+          </div>
+
+          {/* Introduction */}
+          <div className="mb-12">
+            <p className="text-lg text-gray-700 leading-relaxed">
+              By accessing or using the Respire LYF application (&quot;Respire LYF,&quot; &quot;the App,&quot; &quot;we,&quot; &quot;our,&quot; or &quot;us&quot;), you agree to be bound by these Terms of Use (&quot;Terms&quot;). If you do not agree, you must not use the application.
+            </p>
           </div>
 
           {/* Content */}
@@ -42,49 +55,56 @@ export default function TermsOfService() {
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">1.</span>
-                <span>Acceptance of Terms</span>
+                <span>Purpose of the App</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                By accessing and using the Respire LYF website and services, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
-              </p>
+              <div className="pl-8 sm:pl-12 space-y-4">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Respire LYF is an AI-powered respiratory wellness application designed to support users in observing and understanding patterns and trends related to respiratory symptoms and daily behaviors.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  The application brings together multiple contextual factors within a unified platform and examines their relationships with user-reported respiratory indicators over time. This approach allows Respire LYF to surface meaningful patterns and contextual associations within a user&apos;s personal data.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Respire LYF provides informational and supportive insights only. The application does not provide medical advice, diagnoses, treatment recommendations, or health predictions, and is not intended to replace professional medical judgment or care.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">2.</span>
-                <span>Use License</span>
+                <span>No Medical Advice</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-6 pl-8 sm:pl-12">
-                Permission is granted to temporarily access the materials on Respire LYF&apos;s website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-              </p>
-              <ul className="list-disc pl-12 sm:pl-16 space-y-3 text-lg text-gray-700">
-                <li>Modify or copy the materials</li>
-                <li>Use the materials for any commercial purpose or for any public display</li>
-                <li>Attempt to reverse engineer any software contained on the website</li>
-                <li>Remove any copyright or other proprietary notations from the materials</li>
-                <li>Transfer the materials to another person or &quot;mirror&quot; the materials on any other server</li>
-              </ul>
+              <div className="pl-8 sm:pl-12 space-y-4">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Respire LYF is not a medical device and does not provide medical advice.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  The app does not diagnose, treat, cure, or prevent disease.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Always consult a qualified healthcare professional for medical decisions.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Do not delay or change treatment based on this app.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">3.</span>
-                <span>Medical Disclaimer</span>
+                <span>Emergency Use</span>
               </h2>
               <div className="pl-8 sm:pl-12">
-                <div className="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg mb-6">
-                  <p className="text-lg text-gray-800 leading-relaxed">
-                    <strong className="text-amber-700">IMPORTANT:</strong> The information provided by Respire LYF is for informational and educational purposes only. It is not intended as a substitute for professional medical advice, diagnosis, or treatment.
-                  </p>
-                </div>
-                <ul className="list-disc pl-6 space-y-3 text-lg text-gray-700">
-                <li>Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition</li>
-                <li>Never disregard professional medical advice or delay in seeking it because of something you have read on our website</li>
-                <li>If you think you may have a medical emergency, call your doctor or emergency services immediately</li>
-                <li>Respire LYF does not recommend or endorse any specific tests, physicians, products, procedures, opinions, or other information that may be mentioned on the website</li>
-                </ul>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Respire LYF is <strong>not for emergency use</strong>.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed mt-4">
+                  If you experience severe breathing difficulty or life-threatening symptoms, <strong>call local emergency services immediately</strong>.
+                </p>
               </div>
             </section>
 
@@ -92,111 +112,124 @@ export default function TermsOfService() {
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">4.</span>
-                <span>User Accounts and Registration</span>
+                <span>AI &amp; Data Limitations</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-6 pl-8 sm:pl-12">
-                When you create an account or register for our services, you agree to:
-              </p>
-              <ul className="list-disc pl-12 sm:pl-16 space-y-3 text-lg text-gray-700">
-                <li>Provide accurate, current, and complete information</li>
-                <li>Maintain and promptly update your information to keep it accurate</li>
-                <li>Maintain the security of your password and identification</li>
-                <li>Accept all responsibility for activities that occur under your account</li>
-                <li>Notify us immediately of any unauthorized use of your account</li>
-              </ul>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  Respire LYF uses artificial intelligence, user input, wearable data, and environmental information to generate insights. You acknowledge and understand that:
+                </p>
+                <ul className="list-disc pl-6 space-y-3 text-lg text-gray-700">
+                  <li>AI-generated insights are not definitive or guaranteed.</li>
+                  <li>Data may be limited, delayed, inaccurate, or unavailable.</li>
+                  <li>Wearable devices and environmental data sources have inherent limitations.</li>
+                  <li>Insights are informational only and should not be relied upon for medical decision-making.</li>
+                </ul>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">5.</span>
-                <span>User Conduct</span>
+                <span>User Responsibilities</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-6 pl-8 sm:pl-12">
-                You agree not to use the service to:
-              </p>
-              <ul className="list-disc pl-12 sm:pl-16 space-y-3 text-lg text-gray-700">
-                <li>Violate any applicable laws or regulations</li>
-                <li>Infringe upon the rights of others</li>
-                <li>Transmit any harmful, offensive, or illegal content</li>
-                <li>Interfere with or disrupt the service or servers</li>
-                <li>Attempt to gain unauthorized access to any portion of the service</li>
-                <li>Collect or store personal data about other users</li>
-                <li>Use automated systems to access the service without permission</li>
-              </ul>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed mb-6">
+                  You agree to:
+                </p>
+                <ul className="list-disc pl-6 space-y-3 text-lg text-gray-700">
+                  <li>Use the app responsibly and as intended</li>
+                  <li>Continue following professional medical advice</li>
+                  <li>Not rely on the App for diagnosis, treatment, or emergencies</li>
+                </ul>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">6.</span>
-                <span>Intellectual Property Rights</span>
+                <span>Eligibility</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                All content, features, and functionality of the Respire LYF website, including but not limited to text, graphics, logos, icons, images, audio clips, digital downloads, and software, are the exclusive property of Respire LYF or its content suppliers and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
-              </p>
+              <div className="pl-8 sm:pl-12 space-y-4">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  You must be <strong>12 years or older</strong> to use Respire LYF.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  If you are under 18, you may use the App only with the consent and supervision of a parent or legal guardian. The parent or guardian is responsible for the minor&apos;s use of the App and compliance with these Terms.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">7.</span>
-                <span>Privacy Policy</span>
+                <span>Intellectual Property</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                Your use of our services is also governed by our Privacy Policy. Please review our Privacy Policy, which also governs your use of the website, to understand our practices. You can find our Privacy Policy at <Link href="/privacy-policy" className="text-[#2894D9] hover:underline font-semibold">/privacy-policy</Link>.
-              </p>
+              <div className="pl-8 sm:pl-12 space-y-4">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  All content, features, algorithms, designs, and materials within Respire LYF are owned by Respire LYF or its licensors and are protected by intellectual property laws.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  You may not copy, modify, distribute, reverse engineer, or misuse any portion of the App without prior written permission.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">8.</span>
-                <span>Limitation of Liability</span>
+                <span>No Guarantees</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed mb-6 pl-8 sm:pl-12">
-                In no event shall Respire LYF, its directors, employees, partners, agents, suppliers, or affiliates be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:
-              </p>
-              <ul className="list-disc pl-12 sm:pl-16 space-y-3 text-lg text-gray-700">
-                <li>Your use or inability to use the service</li>
-                <li>Any conduct or content of third parties on the service</li>
-                <li>Any unauthorized access to or use of our servers and/or any personal information stored therein</li>
-                <li>Any interruption or cessation of transmission to or from the service</li>
-                <li>Any bugs, viruses, trojan horses, or the like that may be transmitted to or through the service</li>
-              </ul>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Respire LYF does not guarantee any health outcomes, symptom improvement, or specific results from use of the App.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">9.</span>
-                <span>Disclaimer of Warranties</span>
+                <span>Limitation of Liability</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                The information on this website is provided on an &quot;as is&quot; basis. To the fullest extent permitted by law, Respire LYF excludes all representations, warranties, conditions, and terms relating to our website and the use of this website (including, without limitation, any warranties implied by law in respect of satisfactory quality, fitness for purpose, and/or the use of reasonable care and skill).
-              </p>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  To the maximum extent permitted by law, Respire LYF shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from your use of the App or reliance on its content.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">10.</span>
-                <span>Indemnification</span>
+                <span>Termination</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                You agree to defend, indemnify, and hold harmless Respire LYF and its licensee and licensors, and their employees, contractors, agents, officers and directors, from and against any and all claims, damages, obligations, losses, liabilities, costs or debt, and expenses (including but not limited to attorney&apos;s fees), resulting from or arising out of your use and access of the service, or a breach of these Terms.
-              </p>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  We reserve the right, at our sole discretion, to suspend or terminate your access to Respire LYF if you violate these Terms or misuse the App.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">11.</span>
-                <span>Termination</span>
+                <span>Privacy &amp; Data Use</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                We may terminate or suspend your account and bar access to the service immediately, without prior notice or liability, under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms. If you wish to terminate your account, you may simply discontinue using the service.
-              </p>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Your use of Respire LYF is also governed by our Privacy Policy, which explains how we collect, use, store, and protect your information, including data from user input, connected devices, and other sources.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed mt-4">
+                  By using Respire LYF, you consent to the data practices described in the Privacy Policy.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
@@ -205,46 +238,74 @@ export default function TermsOfService() {
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">12.</span>
                 <span>Governing Law</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                These Terms shall be interpreted and governed by the laws of the jurisdiction in which Respire LYF operates, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
-              </p>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  These Terms are governed by the laws of the State of California, United States, without regard to conflict of law principles.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">13.</span>
-                <span>Changes to Terms</span>
+                <span>Arbitration &amp; No Class Actions</span>
               </h2>
-              <p className="text-lg text-gray-700 leading-relaxed pl-8 sm:pl-12">
-                We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion. By continuing to access or use our service after any revisions become effective, you agree to be bound by the revised terms.
-              </p>
+              <div className="pl-8 sm:pl-12 space-y-4">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Any dispute arising out of or relating to Respire LYF shall be resolved exclusively through binding arbitration, except where small-claims court is permitted.
+                </p>
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  Disputes must be brought individually. You waive the right to participate in class actions or representative proceedings.
+                </p>
+              </div>
             </section>
 
             <section className="relative">
               <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                 <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">14.</span>
-                <span>Contact Information</span>
+                <span>Updates to These Terms</span>
+              </h2>
+              <div className="pl-8 sm:pl-12">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  We may update these Terms from time to time. Continued use of Respire LYF after changes are posted constitutes acceptance of the updated Terms.
+                </p>
+              </div>
+            </section>
+
+            <section className="relative">
+              <div className="absolute -left-4 sm:-left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-[#2894D9] to-[#256096] rounded-full opacity-20"></div>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                <span className="text-[#2894D9] text-2xl sm:text-3xl font-black">15.</span>
+                <span>Contact</span>
               </h2>
               <div className="pl-8 sm:pl-12">
                 <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                  If you have any questions about these Terms of Service, please contact us at:
+                  If you have any questions about these Terms of Use, please contact us at:
                 </p>
                 <div className="bg-gradient-to-r from-[#2894D9]/10 to-[#256096]/10 border-l-4 border-[#2894D9] p-6 rounded-r-lg">
                   <p className="text-lg text-gray-800">
                     <strong className="text-gray-900">Email:</strong>{' '}
-                    <a href="mailto:contact@respirelyf.com" className="text-[#2894D9] hover:text-[#217cb8] font-semibold underline">
-                      contact@respirelyf.com
+                    <a href="mailto:contact@aiforlife.ai" className="text-[#2894D9] hover:text-[#217cb8] font-semibold underline">
+                    contact@aiforlife.ai
                     </a>
                   </p>
                 </div>
               </div>
             </section>
+
+            {/* Final Note */}
+            <section className="relative mt-16 pt-8 border-t border-gray-200/50">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Final Note</h3>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Respire LYF supports awareness — <strong>medical decisions remain between you and your healthcare provider</strong>.
+              </p>
+            </section>
           </div>
 
           {/* Footer Navigation */}
-          <div className="mt-16 pt-8 border-t border-gray-200/50">
+          <div className="mt-16 pt-8 border-t border-gray-200/50 flex flex-col sm:flex-row gap-4 sm:gap-6">
             <Link 
               href="/"
               className="inline-flex items-center gap-2 text-[#2894D9] hover:text-[#217cb8] font-semibold text-lg transition-colors group"
@@ -252,9 +313,17 @@ export default function TermsOfService() {
               <span className="group-hover:-translate-x-1 transition-transform">←</span>
               <span>Back to Home</span>
             </Link>
+            <Link 
+              href="/faqs"
+              className="inline-flex items-center gap-2 text-[#2894D9] hover:text-[#217cb8] font-semibold text-lg transition-colors"
+            >
+              <span>View FAQs</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
           </div>
         </div>
       </div>
     </div>
+    </>
   )
 }

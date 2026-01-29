@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Search Result Preview - Respire LYF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: arial, sans-serif;
+            background: #fff;
+            color: #202124;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Google Search Header */
+        .search-header {
+            background: #fff;
+            border-bottom: 1px solid #ebebeb;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .google-logo {
+            width: 92px;
+            height: 30px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjcyIiBoZWlnaHQ9IjkyIiB2aWV3Qm94PSIwIDAgMjcyIDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9IiM0Mjg1RjQiIGQ9Ik0xMTUuNzUgNDcuMThjMC0xMi43Ny0xMC4yNC0yMy4wMS0yMy4wMS0yMy4wMVM2OS43MyAzNC40MSA2OS43MyA0Ny4xOGMwIDEyLjgyIDEwLjI0IDIzLjA2IDIzLjAxIDIzLjA2IDEyLjgyIDAgMjMuMDEtMTAuMjkgMjMuMDEtMjMuMDZ6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTE2My43NSA0Ny4xOGMwLTEyLjgyIDEwLjI0LTIzLjA2IDIzLjAxLTIzLjA2UzIwOS43NyAzNC40MSAyMDkuNzcgNDcuMThjMCAxMi43Ny0xMC4yNCAyMy4wMS0yMy4wMSAyMy4wMS0xMi44MiAwLTIzLjAxLTEwLjI5LTIzLjAxLTIzLjAxeiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMTUuNzUgNzEuMjljMC00LjAyIDMuMjctNy4yOSA3LjI5LTcuMjloNDYuMTRjNC4wMiAwIDcuMjkgMy4yNyA3LjI5IDcuMjl2MTguNzFIMTE1Ljc1VjcxLjI5eiIvPjxwYXRoIGZpbGw9IiNFQTQzMzUiIGQ9Ik0xODYuNzUgNDcuMThjMC0xMi44Mi0xMC4yNC0yMy4wNi0yMy4wMS0yMy4wNlMxNDAuNzMgMzQuNDEgMTQwLjczIDQ3LjE4YzAgMTIuNzcgMTAuMjQgMjMuMDEgMjMuMDEgMjMuMDEgMTIuODIgMCAyMy4wMS0xMC4yOSAyMy4wMS0yMy4wMXoiLz48L3N2Zz4=') no-repeat;
+            background-size: contain;
+        }
+        
+        .search-box-container {
+            flex: 1;
+            max-width: 584px;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            height: 44px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 0 44px 0 16px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-box:hover {
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+        }
+        
+        .search-box:focus {
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+            border-color: transparent;
+        }
+        
+        /* Search Results Container */
+        .results-container {
+            max-width: 652px;
+            margin: 0 auto;
+            padding: 20px 20px 0;
+        }
+        
+        .results-stats {
+            color: #70757a;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        /* Individual Result */
+        .search-result {
+            margin-bottom: 26px;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            line-height: 1.3;
+            font-weight: 400;
+            color: #1a0dab;
+            cursor: pointer;
+            margin-bottom: 3px;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .result-title:hover {
+            text-decoration: underline;
+        }
+        
+        .result-title:visited {
+            color: #609;
+        }
+        
+        .result-url-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        .result-favicon {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            object-fit: contain;
+            display: block;
+        }
+        
+        .result-url {
+            color: #202124;
+            font-size: 14px;
+        }
+        
+        .result-url-path {
+            color: #5f6368;
+        }
+        
+        .result-ellipsis {
+            margin-left: auto;
+            color: #5f6368;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+        
+        .result-snippet {
+            color: #4d5156;
+            font-size: 14px;
+            line-height: 1.58;
+            word-wrap: break-word;
+        }
+        
+        .read-more-link {
+            color: #1a0dab;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .read-more-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Info Section */
+        .info-section {
+            background: #f8f9fa;
+            border-left: 3px solid #1a73e8;
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 4px;
+            max-width: 652px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .info-section h3 {
+            color: #202124;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        
+        .info-section p {
+            color: #5f6368;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .info-section code {
+            background: #e8eaed;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #202124;
+        }
+        
+        .tools-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .tools-list li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .tools-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1a73e8;
+        }
+        
+        .tools-list a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        
+        .tools-list a:hover {
+            text-decoration: underline;
+        }
+        
+        .note {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #70757a;
+            padding-top: 15px;
+            border-top: 1px solid #e8eaed;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Search Header -->
+    <div class="search-header">
+        <div class="google-logo"></div>
+        <div class="search-box-container">
+            <input type="text" class="search-box" value="Respire LYF" readonly>
+        </div>
+    </div>
+    
+    <!-- Search Results -->
+    <div class="results-container">
+        <div class="results-stats">
+            About 1 results (0.39 seconds)
+        </div>
+        
+        <!-- Your Search Result -->
+        <div class="search-result">
+            <a href="https://respirelyf.com" class="result-title">Respire LYF</a>
+            
+            <div class="result-url-container">
+                <img src="/icons/respirelyf_logo.png" alt="Respire LYF Logo" class="result-favicon" onerror="this.style.display='none'">
+                <span class="result-url">https://<span class="result-url-path">respirelyf.com</span></span>
+                <span class="result-ellipsis">⋮</span>
+            </div>
+            
+            <div class="result-snippet">
+                Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.
+                <a href="https://respirelyf.com" class="read-more-link">Read more</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Info Section -->
+    <div class="info-section">
+        <h3>📋 Current Configuration</h3>
+        <p><strong>Title:</strong> <code>Respire LYF</code></p>
+        <p><strong>Description:</strong> <code>Transforming respiratory care through intelligent, all-in-one analysis that reveals the hidden patterns affecting your breathing. We believe every person deserves to understand their personal respiratory fingerprint.</code></p>
+        <p><strong>URL:</strong> <code>https://respirelyf.com</code></p>
+        <p><strong>Favicon:</strong> <code>/favicon.ico</code> (serves your Respire LYF logo)</p>
+        
+        <h3 style="margin-top: 20px;">🔍 Testing Tools</h3>
+        <p>After deployment, test your search appearance:</p>
+        <ul class="tools-list">
+            <li><a href="https://search.google.com/test/rich-results" target="_blank">Google Rich Results Test</a> - Preview how your page appears</li>
+            <li><a href="https://search.google.com/search-console" target="_blank">Google Search Console</a> - Request indexing and monitor</li>
+            <li><a href="https://developers.facebook.com/tools/debug/" target="_blank">Facebook Sharing Debugger</a> - Test Open Graph tags</li>
+        </ul>
+        
+        <div class="note">
+            <strong>Note:</strong> Google may take a few days to weeks to update the favicon and description in search results after deployment. Use Google Search Console to request re-indexing for faster updates.
+        </div>
+    </div>
+</body>
+</html>

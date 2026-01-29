@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import { X } from 'lucide-react'
 import Icon from '@/components/ui/Icon'
+import { trackModalInteraction } from '@/lib/analytics'
 
 interface DeterminantModalProps {
   isOpen: boolean
@@ -30,85 +31,85 @@ const pdfMap: Record<string, string> = {
 }
 
 const determinantContent: Record<string, { title: string; content: string }> = {
+  sleep: {
+    title: 'Sleep',
+    content: `**Your worst breathing days don't follow your worst sleep nights**—they come two days later, and no one's told you why!!
+**That delay isn't random.** But the exact lag varies person to person—anywhere from 24 to 72 hours, depending on factors most sleep advice ignores.
+Which means you might be treating Wednesday's flare without realizing Monday caused it.
+**Read the full paper** to map your personal sleep-symptom lag and stop treating symptoms two days too late.
+Sleep is one variable. Stress, medication timing, and environment interact with it—your breathing is shaped by patterns, not isolated factors.`
+  },
   inhaler: {
-    title: 'Inhaler Use',
-    content: `Why do most people's inhalers fail them, even when taking every dose?
-Studies show 86% make technique errors that reduce lung delivery by over 60%—meaning most doses never reach your airways.
-After 40 years of education, only 31% use the correct technique, while non-adherence causes 60-80% of preventable attacks.
-Your inhaler fails when stress makes you rush, poor sleep kills consistency, or daily chaos disrupts the precise technique needed for medicine to reach the lungs instead of the air.
-Find out why your inhaler isn't working like it should in the magazine.`
+    title: 'Inhaler use',
+    content: `Your inhaler works fine at the doctor's office but barely touches your symptoms at 3 AM—and it's not the medication that's different, it's **you under stress!!**
+Stress changes your breathing pattern, your coordination, your flow rate. Each device fails **differently** under pressure—and you've never been trained for that.
+The gap between "correct technique" and "technique that works during an attack" is where **most medication gets wasted.**
+Read the full paper to learn your device-specific failure pattern and how to train for the moments when technique matters most.
+Technique is one variable. Medication timing, stress response, and inflammation levels interact with it—your relief depends on **more than the inhaler alone.**`
   },
   supplements: {
     title: 'Supplements',
-    content: `That daily vitamin might be helping or hurting your breathing.
-Research on omega-3s, vitamin D, and magnesium shows variable respiratory effects based on individual biology.
-Supplement timing affects medication absorption. Some enhance, others interfere; effects vary by genetics.
-Supplements work within your complete picture: diet, stress, sleep, and medications determine effectiveness.
-Learn how supplements influence your breathing quality in the magazine.`
+    content: `Your doctor said try vitamin D. You did. Nothing changed. But the problem might not be the supplement—it might be that **no one checked** whether you'd actually respond to it!!
+Same dose, same supplement, **dramatically different results** across individuals. The research is clear on that. What's missing is any way to know which group you're in before you waste six months.
+Most people take supplements based on **population averages** and hope for the best.
+**Read the full paper** to learn which supplements have real evidence, what predicts individual response, and how to stop guessing.
+Supplements are one variable. Your baseline levels, absorption, and timing interact with them—what works depends on **more than the pill itself.**`
   },
   medications: {
     title: 'Medication',
-    content: `What if the timing of your pill matters more than the pill itself?
-Your body clock changes how medication works. Afternoon doses (3-4 PM) might protect your lungs better at night than morning doses.
-Half of patients don't take meds as prescribed, and every missed dose pushes you closer to the hospital—adherence literally predicts survival.
-Here's what steals medication power: eating at the wrong time blocks absorption, supplements interfere, poor sleep weakens effects, and stress makes everything worse.
-Find out how medication timing shapes your breathing in the magazine.`
-  },
-  sleep: {
-    title: 'Sleep',
-    content: `Ever wonder why some nights you breathe easy, while others feel impossible?
-75% of people with asthma report worse nighttime symptoms. Research shows your lung function naturally drops during sleep due to your body's internal clock.
-Sleep under 5 hours = 1.5x higher breathing struggles next day. It's a bidirectional relationship: breathing problems disrupt your sleep, and then sleep loss worsens breathing issues.
-Sleep doesn't affect breathing alone—it's the master switch controlling stress hormones, food cravings, hydration levels, and medication consistency that collectively determine your respiratory health.
-Uncover the sleep secrets sabotaging your breathing every night in the magazine.`
-  },
-  stress: {
-    title: 'Stress',
-    content: `Why does stress tighten your chest—even when sitting still?
-Chronic stress can make your rescue inhaler up to 9.5x less effective—it literally changes how your body responds to the medication you depend on.
-Stress weakens your immune system, making you more vulnerable to infections (the #1 trigger of breathing emergencies) and increasing flare-up risk over 4x.
-Stress is the invisible connector: it ruins your sleep, drives unhealthy food cravings, dehydrates you, and makes you forget medications—all working together to steal your breath.
-See how stress is hijacking your lungs without you knowing in the magazine.`
-  },
-  food: {
-    title: 'Food',
-    content: `Why does breathing feel harder after certain meals?
-High-fat meals can trigger airway inflammation within 4 hours and reduce bronchodilator response up to 50%.
-5-10% show sensitivity to sulfites in foods, while fiber influences gut bacteria that communicate with lung immunity.
-Meal timing shapes your breathing fingerprint. Late meals cause reflux, large portions compress lungs, and inflammatory foods amplify the breathing damage from stress and poor sleep.
-Decode the food-breathing connection no one talks about in the magazine.`
-  },
-  hydration: {
-    title: 'Hydration',
-    content: `Your airways need water to work: here's what happens when they don't get it.
-Studies link dehydration to increased cough frequency in children with asthma, yet it's rarely discussed.
-Airways depend on a thin liquid layer (about 7 micrometers) for defense. Dehydration thickens mucus and slows this protective clearance system.
-Hydration timing works with sleep cycles, exercise, stress, and medications to support breathing.
-Discover how hydration changes everything for your lungs in the magazine.`
+    content: `Some days your medication works great; other days the **same dose feels like nothing**—and you can't figure out why!!
+It might not be the medication. Your body's sensitivity to it shifts throughout the day based on **circadian rhythms** most prescriptions ignore.
+The same dose at 8 AM vs 3 PM can perform **dramatically differently**—but no one's told you to experiment with timing.
+**Read the full paper** to find your personal peak response window and get more from the medication you're already taking.
+Timing is one variable. Sleep, food, and stress shift your circadian rhythm—your response depends on **more than the dose itself.**`
   },
   weather: {
     title: 'Weather',
-    content: `Why does the weather affect your breathing differently every time?
-COPD flare-ups are 2.16x higher in winter, and extreme cold is linked to 20% higher asthma attack risk.
-Hot, humid air triggers measurable airway constriction through nerve reflexes—it's biological, not anxiety.
-The secret: weather combines with your sleep, stress, and hydration levels, creating unique patterns that explain why the same forecast affects you differently each time.
-Find out what the weather really does to your airways in the magazine.`
+    content: `You check the weather app every morning, but it never predicts which days will be bad—because it's tracking **the wrong variables** for your lungs!!
+It's not temperature. It's the swing. A **15-degree shift in 24 hours**, combined with pressure changes, triggers more symptoms than steady cold ever does.
+But your specific combination—humidity + pressure, or temperature + pollen—is **different from the next person's**. Generic forecasts can't capture that.
+**Read the full paper** to identify which 2-3 weather variables actually predict your symptoms and stop reacting to days that don't matter.
+Weather is one variable. Your inflammation baseline, sleep, and medication timing interact with it—bad days are shaped by **combinations, not forecasts.**`
   },
   environmental: {
-    title: 'Environmental Factors',
-    content: `The air looks clear so why can't you breathe?
-Pollen seasons are now 20 days longer with 21% higher concentrations than three decades ago. Climate change is making invisible triggers worse.
-Air pollution increases coughing within the same hour of exposure; your airways react in real-time to what you can't see.
-Moderate pollen plus moderate ozone plus poor sleep triggers severe symptoms when none alone would, revealing why "bad air days" affect you differently each time.
-Discover the invisible triggers in every breath you take in the magazine.`
+    title: 'Environmental factors',
+    content: `Some days the air quality is "moderate" and you're miserable; other days it's "unhealthy" and you feel fine—the alerts **don't match your reality**!!
+That's because triggers combine. Ozone alone might not bother you. Pollen alone might be manageable. But ozone plus pollen on the same day can **multiply the effect**.
+Your personal threshold—the specific combination that sets you off—**isn't what the AQI measures**.
+**Read the full paper** to identify your synergistic triggers and stop relying on alerts designed for someone else's lungs.
+Environment is one variable. Your genetics, sensitization history, and current inflammation interact with it—reactions depend on **combinations, not single readings.**`
   },
   activity: {
     title: 'Activity',
-    content: `Why does exercise feel easy one day, impossible the next?
-Active COPD patients show 34% lower readmissions and 47% lower mortality than inactive patients.
-40-90% get exercise-induced bronchoconstriction, but proper warm-up creates 1-2 hour protection.
-Success depends on medication timing, hydration, sleep, food, and your body's daily rhythm working together.
-Uncover your personal exercise-breathing patterns in the magazine.`
+    content: `You know exercise is supposed to help, but every time you try, you end up **tight-chested or worse** the next day!!
+The problem usually isn't exercise itself—it's the **wrong intensity, wrong warm-up, or wrong timing** for where your body is that day.
+There's a version of movement that helps your lungs without triggering them. But generic advice doesn't account for **your phenotype or inflammation baseline**.
+**Read the full paper** to find the approach that gives you the mortality benefit without the post-exercise flare.
+Activity is one variable. Your warm-up protocol, medication timing, and current inflammation interact with it—benefit vs. setback depends on **calibration, not just effort.**`
+  },
+  stress: {
+    title: 'Stress',
+    content: `That deadline passes, you finally relax—then your breathing gets **worse over the next two days**, not better!!
+Stress doesn't just feel bad—it reduces how well your rescue medication works for **up to 48 hours** and triggers inflammation that peaks days later.
+The frustrating part: by the time you notice symptoms, the stress is over. So you **never connect them**.
+**Read the full paper** to map your personal stress-symptom delay and intervene before the cascade starts—not after.
+Stress is one variable. Sleep, baseline inflammation, and medication timing interact with it—your flare pattern depends on **the full sequence, not just the stressor.**`
+  },
+  food: {
+    title: 'Food',
+    content: `You've suspected certain foods make your breathing worse but could never prove it—because the reaction doesn't happen until **hours or days later**, and never the same way twice!!
+That inconsistency isn't in your head. Food triggers often combine—one ingredient is fine alone, but **paired with another** on the same day, it sets you off.
+**Single-food elimination** will never catch that pattern.
+**Read the full paper** to learn how to test for combinations, not just individual foods—and finally get a clear answer.
+Food is one variable. Your gut microbiome, inflammation status, and timing interact with it—reactions depend on **context, not just ingredients.**`
+  },
+  hydration: {
+    title: 'Hydaration',
+    content: `You've tried mucolytics, steam, expectorants—and your mucus is **still thick every morning**. The problem might not be what you're taking, but **when you're drinking**!!
+Your mucus clearance peaks about **an hour after hydration**—not continuously throughout the day. Random sipping misses that window entirely.
+And hydrating at the wrong time before bed can **fragment your sleep**, which triggers the inflammation you were trying to prevent.
+**Read the full paper** to learn the timing windows that actually improve clearance—without wrecking your sleep.
+Hydration is one variable. Sleep quality, medication type, and activity level interact with it—clearance depends on **timing, not just volume.**`
   }
 }
 
@@ -122,6 +123,12 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
   const [isLoading, setIsLoading] = useState(false)
 
   const content = cardId ? determinantContent[cardId] : null
+
+  useEffect(() => {
+    if (isOpen) {
+      trackModalInteraction('DeterminantModal', 'open')
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) {
@@ -367,7 +374,7 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                       ) : null}
                     </div>
                   )}
-                  <h2 className="text-2xl font-bold text-gray-900 text-center uppercase">
+                  <h2 className="text-2xl font-bold text-gray-900 text-center">
                     {isSubmitted ? "Thank you!" : content.title}
                   </h2>
                 </div>
@@ -389,30 +396,41 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                     <div className="mb-6 space-y-4">
                       {(() => {
                         const lines = content.content.split('\n').filter(line => line.trim())
-                        const question = lines[0] // First line is the question
-                        const bulletPoints = lines.slice(1, -1) // Middle lines are bullet points
-                        const callToAction = lines[lines.length - 1] // Last line is call to action
+                        const firstLine = lines[0] // First line is bold statement
+                        const middleLines = lines.slice(1, -1) // Middle lines are regular paragraphs
+                        const lastLine = lines[lines.length - 1] // Last line is the final statement
+                        
+                        // Function to parse bold (**text**) and render it
+                        const renderFormatted = (text: string) => {
+                          const parts = text.split(/(\*\*.*?\*\*)/g)
+                          return parts.map((part, index) => {
+                            if (part.startsWith('**') && part.endsWith('**')) {
+                              const boldText = part.slice(2, -2)
+                              return <strong key={index} className="font-bold">{boldText}</strong>
+                            }
+                            return <span key={index}>{part}</span>
+                          })
+                        }
                         
                         return (
                           <>
-                            {/* Leading Question */}
-                            <p className="text-gray-900 font-bold leading-relaxed mb-4">
-                              {question}
+                            {/* First Line - Regular Text with Bold Phrases */}
+                            <p className="text-gray-700 leading-relaxed mb-4">
+                              {renderFormatted(firstLine)}
                             </p>
                             
-                            {/* Bullet Points */}
-                            <ul className="space-y-3 mb-4">
-                              {bulletPoints.map((point, index) => (
-                                <li key={index} className="text-gray-700 leading-relaxed flex items-start">
-                                  <span className="text-gray-900 mr-2 mt-1.5">•</span>
-                                  <span>{point}</span>
-                                </li>
+                            {/* Middle Paragraphs - Regular Text with Bold */}
+                            <div className="space-y-3 mb-4">
+                              {middleLines.map((paragraph, index) => (
+                                <p key={index} className="text-gray-700 leading-relaxed">
+                                  {renderFormatted(paragraph)}
+                                </p>
                               ))}
-                            </ul>
+                            </div>
                             
-                            {/* Call to Action (Bold) */}
-                            <p className="text-gray-900 font-bold  leading-relaxed">
-                              {callToAction}
+                            {/* Last Line - Final Statement */}
+                            <p className="text-gray-700 leading-relaxed">
+                              {renderFormatted(lastLine)}
                             </p>
                           </>
                         )

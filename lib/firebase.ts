@@ -19,7 +19,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Analytics (only in browser environment)
-let analytics;
+import type { Analytics } from 'firebase/analytics';
+
+let analytics: Analytics | undefined;
 if (typeof window !== 'undefined') {
   analytics = getAnalytics(app);
 }
