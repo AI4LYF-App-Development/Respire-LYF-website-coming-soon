@@ -97,18 +97,15 @@ When you are ready to send attribution to the backend:
 
 ---
 
-## 7. App not installed (fallback on website)
+## 7. App not installed → redirect to App Store
 
-When the user taps a link and the app is **not** installed (or the link opens in Safari):
+When the user taps a Universal Link and the app is **not** installed, iOS opens the URL in the browser (Safari). The **website** (app.respirelyf.com) then redirects the user to the App Store so they can install the app.
 
-- The **website** serves a fallback page for supported paths (e.g. `/paywall`, `/youtube`, `/instagram`, …).
-- The fallback page shows:
-  - Short copy: “Open in Respire LYF App”
-  - “Copy link” (same Universal Link, including query string)
-  - **“Download on the App Store”** (links to the app by **bundle ID** via `NEXT_PUBLIC_APP_STORE_ID`; this is the app, not the website).
-- No 404 for these paths; the user can install the app or copy the link to open it from another app (e.g. Notes).
+- **Middleware** (`middleware.ts`): For every request to host `app.respirelyf.com`, except `/.well-known/apple-app-site-association`, the server responds with a **302 redirect** to the App Store page: `https://apps.apple.com/app/id{NEXT_PUBLIC_APP_STORE_ID}`.
+- **Requirement:** Set `NEXT_PUBLIC_APP_STORE_ID` in the website environment (e.g. Vercel) to your app's numeric App Store ID. If it is not set, no redirect occurs and the request is handled by the normal pages (e.g. fallback UI with "Download on the App Store" button).
+- **AASA is unchanged:** Requests to `/.well-known/apple-app-site-association` are never redirected, so Universal Link validation continues to work.
 
-Casing redirects (e.g. `/YouTube` → `/youtube`) are configured in `next.config.js` so that after redirect the fallback page still matches and works.
+Casing redirects (e.g. `/YouTube` → `/youtube`) are configured in `next.config.js` for the main site; the app subdomain redirects to the App Store before any page is rendered.
 
 ---
 

@@ -1,5 +1,5 @@
-// App Store ID from App Store Connect (numeric). Set NEXT_PUBLIC_APP_STORE_ID in env.
-export const APP_STORE_ID = process.env.NEXT_PUBLIC_APP_STORE_ID || ''
+// Numeric App Store ID (Apple ID from App Store Connect), NOT bundle ID. Used in apps.apple.com/app/id{id}. Set NEXT_PUBLIC_APP_STORE_ID in env.
+export const APP_STORE_ID = process.env.NEXT_PUBLIC_APP_STORE_ID || '6752850093'
 export const APP_STORE_URL = APP_STORE_ID
   ? `https://apps.apple.com/app/id${APP_STORE_ID}`
   : ''
