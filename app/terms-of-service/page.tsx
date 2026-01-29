@@ -306,14 +306,21 @@ export default function TermsOfService() {
 
           {/* Footer Navigation */}
           <div className="mt-16 pt-8 border-t border-gray-200/50 flex flex-col sm:flex-row gap-4 sm:gap-6">
-            <Link 
+            <Link
               href="/"
               className="inline-flex items-center gap-2 text-[#2894D9] hover:text-[#217cb8] font-semibold text-lg transition-colors group"
             >
               <span className="group-hover:-translate-x-1 transition-transform">←</span>
               <span>Back to Home</span>
             </Link>
-            <Link 
+            <Link
+              href="/privacy-policy"
+              className="inline-flex items-center gap-2 text-[#2894D9] hover:text-[#217cb8] font-semibold text-lg transition-colors group"
+            >
+              <span className="group-hover:-translate-x-1 transition-transform">←</span>
+              <span>Privacy Policy</span>
+            </Link>
+            <Link
               href="/faqs"
               className="inline-flex items-center gap-2 text-[#2894D9] hover:text-[#217cb8] font-semibold text-lg transition-colors"
             >

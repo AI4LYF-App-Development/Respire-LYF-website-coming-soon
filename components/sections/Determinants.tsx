@@ -240,15 +240,15 @@ function Card({ card, onClick, onWatchVideo }: { card: Determinant; onClick: () 
           </div>
           <div className="flex flex-row gap-1.5 sm:gap-2 pt-2 sm:pt-3 pb-1 sm:pb-1.5 border-t border-[#2894D9]/10 flex-shrink-0 justify-center items-center w-full mt-auto">
           <button 
-            className="btn-action btn-read-magazine" 
+            className="btn-action btn-view-magazine" 
             onClick={(e) => {
               e.stopPropagation()
-              trackButtonClick('Read Magazine', 'determinants_card', { card_name: card.name, card_id: card.id })
+              trackButtonClick('View Magazine', 'determinants_card', { card_name: card.name, card_id: card.id })
               onClick()
             }}
           >
             <Icon name="library_books" size={14} className="text-white shrink-0" />
-            <span className="text-[9px] sm:text-[10px] tracking-wide whitespace-nowrap">Read Magazine</span>
+            <span className="text-[9px] sm:text-[10px] tracking-wide whitespace-nowrap">View Magazine</span>
           </button>
           <button 
             className="btn-action btn-watch-video"
@@ -291,7 +291,7 @@ export default function Determinants() {
   }, [])
 
   const handleCardClick = (card: Determinant) => {
-    trackCardInteraction(card.id, card.name, 'read_magazine')
+    trackCardInteraction(card.id, card.name, 'view_magazine')
     setSelectedCardId(card.id)
     setSelectedCardName(card.name)
     setSelectedCardIconSrc(iconSrcMap[card.id] || null)
@@ -521,14 +521,14 @@ export default function Determinants() {
             min-height: auto;
           }
         }
-        .btn-read-magazine {
+        .btn-view-magazine {
           color: white;
           background-color: #2894D9;
           border: none;
           box-shadow: 0 4px 12px -2px rgba(40, 148, 217, 0.4), 0 2px 4px -1px rgba(40, 148, 217, 0.2);
           font-weight: 800;
         }
-        .btn-read-magazine:hover {
+        .btn-view-magazine:hover {
           box-shadow: 0 12px 20px -4px rgba(40, 148, 217, 0.5), 0 4px 8px -2px rgba(40, 148, 217, 0.3);
           transform: scale(1.05) translateY(-1px);
           background-color: #217cb8;

@@ -45,7 +45,7 @@ export enum EventCategory {
  */
 export enum EventAction {
   // Button clicks
-  CLICK_READ_MAGAZINE = 'click_read_magazine',
+  CLICK_VIEW_MAGAZINE = 'click_view_magazine',
   CLICK_WATCH_VIDEO = 'click_watch_video',
   CLICK_JOIN_WAITLIST = 'click_join_waitlist',
   CLICK_STAY_TUNED = 'click_stay_tuned',
@@ -172,8 +172,8 @@ export function trackButtonClick(
   let action: EventAction
 
   switch (buttonName.toLowerCase()) {
-    case 'read magazine':
-      action = EventAction.CLICK_READ_MAGAZINE
+    case 'view magazine':
+      action = EventAction.CLICK_VIEW_MAGAZINE
       break
     case 'watch video':
       action = EventAction.CLICK_WATCH_VIDEO
@@ -209,15 +209,15 @@ export function trackButtonClick(
 export function trackCardInteraction(
   cardId: string,
   cardName: string,
-  interactionType: 'view' | 'click' | 'read_magazine' | 'watch_video'
+  interactionType: 'view' | 'click' | 'view_magazine' | 'watch_video'
 ) {
   const action =
     interactionType === 'view'
       ? EventAction.CARD_VIEW
       : interactionType === 'click'
       ? EventAction.CARD_CLICK
-      : interactionType === 'read_magazine'
-      ? EventAction.CLICK_READ_MAGAZINE
+      : interactionType === 'view_magazine'
+      ? EventAction.CLICK_VIEW_MAGAZINE
       : EventAction.CLICK_WATCH_VIDEO
 
   trackEvent(

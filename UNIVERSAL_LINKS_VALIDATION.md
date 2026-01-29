@@ -10,8 +10,8 @@
   - Uses `NextResponse.json()` to return JSON
 
 - [ ] **AASA Content Verification**
-  - App ID format: `6752850093.com.ai4lyf.RespireLYF`
-  - Team ID: `6752850093`
+  - App ID format: `2BUR257KMS.com.ai4lyf.RespireLYF`
+  - Team ID: `2BUR257KMS`
   - Bundle ID: `com.ai4lyf.RespireLYF`
   - Paths array includes all required routes:
     - `/`
@@ -81,7 +81,7 @@
       "apps": [],
       "details": [
         {
-          "appID": "6752850093.com.ai4lyf.RespireLYF",
+          "appID": "2BUR257KMS.com.ai4lyf.RespireLYF",
           "paths": [
             "/",
             "/paywall",
@@ -144,8 +144,8 @@ curl -s https://app.respirelyf.com/.well-known/apple-app-site-association | jq .
 
 - [ ] **App ID Configuration**
   - Bundle ID: `com.ai4lyf.RespireLYF`
-  - Team ID: `6752850093`
-  - App ID format: `6752850093.com.ai4lyf.RespireLYF`
+  - Team ID: `2BUR257KMS`
+  - App ID format: `2BUR257KMS.com.ai4lyf.RespireLYF`
 
 - [ ] **Code Signing**
   - App signed with correct Team ID

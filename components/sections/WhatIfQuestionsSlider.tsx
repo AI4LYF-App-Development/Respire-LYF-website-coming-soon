@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, Fragment } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import AnimatedTextWordByWord from '../animations/AnimatedTextWordByWord'
@@ -99,9 +99,16 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
     return () => window.removeEventListener('resize', updateWindowSize)
   }, [])
 
-  // Breath particles - small floating bubbles
-  const breathParticles = useMemo(() => (
-    Array.from({ length: 60 }, (_, i) => ({
+  // Only run random-dependent code after mount to avoid server/client hydration mismatch
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // Breath particles - small floating bubbles (computed only on client to avoid hydration mismatch)
+  const breathParticles = useMemo(() => {
+    if (!isClient) return []
+    return Array.from({ length: 60 }, (_, i) => ({
       id: i,
       size: 3.5 + Math.random() * 5.5, // ~4-9px
       left: Math.random() * 100,
@@ -110,7 +117,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
       drift: (Math.random() - 0.5) * 60,
       opacity: 0.35 + Math.random() * 0.25, // 0.35-0.6
     }))
-  ), [])
+  }, [isClient])
 
   // Air streams - horizontal gradient lines
   const airStreams = useMemo(() => (
@@ -1309,9 +1316,8 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                         const isVisible = wordIndex <= simplePersonalAffordableWordIndex
 // 256096
                         return (
-                        <>
-                          <span 
-                            key={`word-${index}`} 
+                        <Fragment key={index}>
+                          <span
                             style={{ 
                               color: isVisible ? '#256096' : 'transparent',
                               transition: 'color 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
@@ -1321,18 +1327,16 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                             </span>
                             {index < 2 && (
                             <>
-                              <span 
-                                key={`separator-${index}`}
+                              <span
                                 className="hidden md:block w-3 h-1 bg-primary rounded-full opacity-30"
-                                style={{ 
+                                style={{
                                   opacity: isVisible ? 0.3 : 0,
                                   transition: 'opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                                 }}
                               ></span>
-                              <span 
-                                key={`dash-${index}`}
+                              <span
                                 className="md:hidden mx-3"
-                                style={{ 
+                                style={{
                                   color: isVisible ? undefined : 'transparent',
                                   transition: 'color 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                                 }}
@@ -1341,7 +1345,7 @@ export default function WhatIfQuestionsSlider({ onJoinWaitlist }: WhatIfQuestion
                               </span>
                             </>
                             )}
-                        </>
+                        </Fragment>
                         )
                       })}
                   </motion.div>

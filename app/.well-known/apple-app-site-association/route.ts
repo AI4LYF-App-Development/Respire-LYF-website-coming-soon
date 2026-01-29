@@ -8,7 +8,7 @@ export async function GET() {
       apps: [],
       details: [
         {
-          appID: '6752850093.com.ai4lyf.RespireLYF',
+          appID: '2BUR257KMS.com.ai4lyf.RespireLYF',
           paths: [
             '/',
             '/paywall',

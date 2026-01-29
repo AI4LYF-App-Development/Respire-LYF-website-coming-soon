@@ -127,7 +127,7 @@ export default function Footer() {
           <p className="text-slate-400 text-sm font-medium text-center md:text-left">
             {/* © 2025 <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#2894D9' }}>LYF</span>. All rights reserved. <span className="mx-2 text-slate-600"></span> */}
             © 2026 <span style={{ color: '#2894D9' }}>Respire</span> <span style={{ color: '#2894D9' }}>LYF</span>. All rights reserved. <span className="mx-2 text-slate-600">|</span>
-            {/* <Link className="text-slate-400 hover:text-white transition-colors" href="/privacy-policy" title="Privacy Policy">Privacy Policy</Link> <span className="mx-2 text-slate-600">|</span> */}
+            <Link className="text-slate-400 hover:text-white transition-colors" href="/privacy-policy" title="Privacy Policy">Privacy Policy</Link> <span className="mx-2 text-slate-600">|</span>
             <Link className="text-slate-400 hover:text-white transition-colors" href="/terms-of-service" title="Terms of Use">Terms of Use</Link> <span className="mx-2 text-slate-600">|</span>
             <Link className="text-slate-400 hover:text-white transition-colors" href="/faqs" title="FAQs">FAQs</Link>
           </p>

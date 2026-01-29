@@ -469,7 +469,7 @@ export default function DeterminantModal({ isOpen, onClose, cardId, cardName, ic
                         disabled={isLoading}
                         className="w-full px-6 py-3 bg-[#2894D9] hover:bg-[#217cb8] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-semibold transition-colors"
                       >
-                        {isLoading ? 'Submitting...' : 'Read Magazine'}
+                        {isLoading ? 'Submitting...' : 'View Magazine'}
                       </button>
                     </form>
                   </>

@@ -21,6 +21,16 @@ const nextConfig = {
   },
   compress: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      { source: '/YouTube', destination: '/youtube', permanent: false },
+      { source: '/Instagram', destination: '/instagram', permanent: false },
+      { source: '/Facebook', destination: '/facebook', permanent: false },
+      { source: '/Reddit', destination: '/reddit', permanent: false },
+      { source: '/X', destination: '/x', permanent: false },
+      { source: '/Tiktok', destination: '/tiktok', permanent: false }
+    ]
+  },
   async headers() {
     return [
       {

@@ -127,7 +127,7 @@ curl -H "Accept: application/json" https://app.respirelyf.com/.well-known/apple-
     "apps": [],
     "details": [
       {
-        "appID": "6752850093.com.ai4lyf.RespireLYF",
+        "appID": "2BUR257KMS.com.ai4lyf.RespireLYF",
         "paths": [
           "/",
           "/paywall",
